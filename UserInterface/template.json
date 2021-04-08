@@ -1,0 +1,17 @@
+{
+	"project_name" : "",
+	"url" : "",
+	"choice" : -1,
+	"preferred" : "",
+    "categories": [],
+    "files counter":-1 ,
+    "lines counter": -1, 
+    "missing values datatype": [],
+    "target": -1,
+    "prediction": "",
+    "number of missing values": -1,
+    "dropcolcnt": -1,
+    "colstodrop": [],
+    "number of lines after cleaning": -1,
+    "type" : "",
+}

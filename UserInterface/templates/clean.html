@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+	<div> How do you want to handle the missing Data</div>
+	<br>
+	<form action = '' method = 'POST'>
+	  	{% csrf_token %}
+		{{ form.as_p }}
+		
+	<button type='submit' value = 'Submit' class = 'btn'>Submit</button>
+	</form>
+{% endblock %}

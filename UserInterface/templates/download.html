@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+		<form action="" method = "GET">
+		<h3>
+		FILE(S) DOWNLOADED SUCCESSFULLY!
+	 	</h3>
+
+	 	<p>Your config file is {{conf}}</p>
+
+	 	<p>Click on the Next button to start checking the formatting of the downloaded files</p>
+
+	 <button type='submit' value="Submit" class = 'btn' onclick="location.href = '/check'">Next</button>
+
+	</form>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+	<div> </div>
+	<br>
+	<form action = 'handle/' method = 'POST'>
+	  	{% csrf_token %}
+		{{ form.as_p }}
+		
+	<button type='submit' name = 'btn' id = 'btn' class = 'btn'>Submit</button>
+	</form>
+{% endblock %}

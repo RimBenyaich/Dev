@@ -1,0 +1,13 @@
+{	
+	"project_name" : "",
+	"url" : "",
+	"choice" : -1,
+	"preferred" : "",
+	"missing" : "",
+	"target" : -1,
+	"prediction" : "",
+	"dropcolcnt" : -1,
+	"cols" : [""],
+	"epochs" : 50,
+	"alpha" : 0.1
+}
