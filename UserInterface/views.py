@@ -1,13 +1,17 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
 from .forms import HomeForm
+from .forms import CheckForm
 from .downloadfromgd import recurs_folders
 from .files import renaming
 from .files import rename_conf
 from .files import init_conf
 from .files import save_to_config_form
 from .files import save_to_config_func
-from .check import checking
+from .files import get_config
+from .check import checks
+from .check import check_ext
+from .check import check_missing
+from .check import missingcount
 import os
 # https://drive.google.com/drive/u/0/folders/1SfNihWNYJQPsniZ-yjQN6lgl1sUYw6RL
 
@@ -27,23 +31,47 @@ def UI(request):
 			path = './' + project_name
 			new_conf = path + conf
 			conf = rename_conf(path, conf, project_name)
-			# os.mkdir(path)
-			# path = './data'
 			cnt = recurs_folders(new_r, cnt, path + '/')
 			renaming(path, '.csv')
 			form.cleaned_data
 			init_conf(conf)
 			save_to_config_form(request, form, conf)
 
-			return render(request, 'download.html', {'form':form, 'conf': conf})
+			return render(request, 'download.html', { 'conf': conf})
+			# return redirect('/download', {'conf' : conf})
 	else:
 		form = HomeForm()
-	return render(request, 'home.html', {'form':form})
+	return render(request, 'home.html', {'form': form})
 
-def check(request):
-	checking(path, conf)
+def clean(request):
+	if request.method == 'POST':
+		form = CheckForm(request.POST)
+		if form.is_valid():
+			missing = request.POST.get('missing')
+			indtar = request.POST.get('indtar')
+			nametar = request.POST.get('nametar')
+	else:
+		form = CheckForm()
+	return render(request, 'clean.html', {'conf': conf})
+	# checking(path, conf)
 
-	return render(request, 'check.html', {})
+	return render(request, 'checked.html', {'num': num, 'dic': dic, 'form': form})
 
-def download(request):
-	return render(request, 'download.html', {})
+def checking(request):
+	directory = os.getcwd();
+	message = ""
+
+	conf = get_config(directory)
+	message = checks(conf)
+	# print(message)
+	if(message != "check"):
+		print(message)
+		return render(request, 'notchecked.html', {'message': message})
+	num = missingcount(conf)
+	dic = check_missing(conf)
+	print(num)
+	if(num == 0):
+		return render(request, 'checked.html', {'num': num})
+	else:
+		form = CheckForm()
+		return render(request, 'checked.html', {'num': num, 'dic': dic, 'form': form})

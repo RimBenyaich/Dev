@@ -1,0 +1,10 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block content %} 
+
+<h3> ERROR IN THE DOWNLOADED FILE </h3>
+
+<p> {{message}} <p>
+
+ <button type='submit' value="Submit" class = 'btn' onclick="location.href = '{% url 'UI' %}'">Go Back</button> 
+{% endblock %}

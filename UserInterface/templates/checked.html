@@ -1,0 +1,22 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block content %} 
+<p> Everything is in order! <p>
+{% if num == 0 %}
+<p> After checking your dataset, there is no missing values </p>
+<button type='submit' value="Submit" class = 'btn' onclick="location.href = 'correlation/'">Next</button>
+
+{% else %}
+<p> After checking your dataset, there are {{num}} missing values </p>
+<p> The missing values are as follows: </p>
+{{dic}}
+<br><br>
+
+<form action='' method='POST'>
+    {% csrf_token %} {{ form.as_p }}
+
+    <button type='submit' name='btn' id='btn' class='btn' onclick="location.href = '{% url 'clean' %}'>Submit</button>
+</form>
+
+{% endif %}
+{% endblock %}
