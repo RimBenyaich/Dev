@@ -1,5 +1,8 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
+{% extends 'base.html' %} 
+{% load static %} {% block content %}
 
-<p> HELLOOOW </p>
+<p> {{num}} lines were dropped. Your dataset is now clean</p>
+<p> Click the Next button to move on to the next phase "Transformation" </p>
+<button type='submit' name='btn' id='btn' class='btn' onclick="location.href = 'correlation/'>Next</button>
 
 {% endblock %}

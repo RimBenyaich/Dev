@@ -2,20 +2,26 @@
 {% load static %} 
 {% block content %} 
 <p> Everything is in order! <p>
+<p> After checking your dataset, here are your columns:
+{{categs}}
+<p>
 {% if num == 0 %}
 <p> After checking your dataset, there is no missing values </p>
 <button type='submit' value="Submit" class = 'btn' onclick="location.href = 'correlation/'">Next</button>
 
 {% else %}
-<p> After checking your dataset, there are {{num}} missing values </p>
+
+<p>There are {{num}} missing values </p>
 <p> The missing values are as follows: </p>
 {{dic}}
-<br><br>
+<br>
 
-<form action='' method='POST'>
-    {% csrf_token %} {{ form.as_p }}
+<form action='{%url 'clean'%}' method='POST'>
+    {% csrf_token %}
+    {{ form.as_p }}
 
-    <button type='submit' name='btn' id='btn' class='btn' onclick="location.href = '{% url 'clean' %}'>Submit</button>
+    <button type='submit' name='btn' id='btn' class='btn'>Submit</button>
+    {% comment %} onclick="location.href = '{% url 'clean' %}" {% endcomment %}
 </form>
 
 {% endif %}

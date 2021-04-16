@@ -8,10 +8,13 @@ from .files import init_conf
 from .files import save_to_config_form
 from .files import save_to_config_func
 from .files import get_config
+from .files import get_data
 from .check import checks
 from .check import check_ext
 from .check import check_missing
 from .check import missingcount
+from .datafr import get_columns
+from .clean import handlemiss
 import os
 # https://drive.google.com/drive/u/0/folders/1SfNihWNYJQPsniZ-yjQN6lgl1sUYw6RL
 
@@ -43,20 +46,6 @@ def UI(request):
 		form = HomeForm()
 	return render(request, 'home.html', {'form': form})
 
-def clean(request):
-	if request.method == 'POST':
-		form = CheckForm(request.POST)
-		if form.is_valid():
-			missing = request.POST.get('missing')
-			indtar = request.POST.get('indtar')
-			nametar = request.POST.get('nametar')
-	else:
-		form = CheckForm()
-	return render(request, 'clean.html', {'conf': conf})
-	# checking(path, conf)
-
-	return render(request, 'checked.html', {'num': num, 'dic': dic, 'form': form})
-
 def checking(request):
 	directory = os.getcwd();
 	message = ""
@@ -67,11 +56,52 @@ def checking(request):
 	if(message != "check"):
 		print(message)
 		return render(request, 'notchecked.html', {'message': message})
+	categs = get_columns(conf)
 	num = missingcount(conf)
 	dic = check_missing(conf)
-	print(num)
+	# print(num)
 	if(num == 0):
-		return render(request, 'checked.html', {'num': num})
+		return render(request, 'checked.html', {'num': num, 'categs': categs})
 	else:
 		form = CheckForm()
-		return render(request, 'checked.html', {'num': num, 'dic': dic, 'form': form})
+		return render(request, 'checked.html', {'num': num, 'dic': dic, 'form': form, 'categs': categs})
+
+def clean(request):
+	curr = os.getcwd()
+	dic = [""]
+	num = 0
+	if request.method == 'POST':
+		form = CheckForm(request.POST)
+		if form.is_valid():
+			missing = request.POST.get('missing')
+			indtar = request.POST.get('indtar')
+			nametar = request.POST.get('nametar')
+			missing = int(missing)
+			if missing == 1:
+				way = "drop"
+			elif missing == 2:
+				way = "mean"
+			elif missing == 3:
+				way = "max"
+			else:
+				way = "min"
+			indtar = int(indtar)
+			conf = get_config(curr)
+			dic = check_missing(conf)
+			directory = './' + get_data("project_name", conf)
+			num = get_data("lines counter", conf)
+			
+			save_to_config_func(way, 'missing', conf)
+			save_to_config_func(indtar, 'target', conf)
+			save_to_config_func(nametar, 'prediction', conf)
+			df = handlemiss(way, directory)
+			newnum = num - len(df)
+			save_to_config_func(len(df), "lines counter after cleaning", conf)
+			return render(request, 'clean.html', {'conf': conf, 'num': newnum})
+	else:
+		form = CheckForm()
+	# checking(path, conf)
+	return render(request, 'checked.html', {'num': num, 'dic': dic, 'form': form})
+
+def correlation(request):
+	render(request, 'corr.html', {})

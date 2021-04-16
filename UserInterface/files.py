@@ -79,11 +79,3 @@ def get_config(directory):
 		if(file.endswith('.json')):
 			if(not file.endswith('template.json')):
 				return file 
-
-#this function will read our csv from the given directory
-def readcsv(directory):
-	for filename in os.listdir(directory):
-		if filename.endswith('.csv'):
-			df = pd.read_csv(directory + '/' + filename)
-			return df
-	return -1
