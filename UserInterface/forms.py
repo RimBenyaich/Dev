@@ -9,29 +9,12 @@ class HomeForm(forms.Form):
 	preferred = forms.ChoiceField(label= 'Model preferred', choices=CHOICES)
 
 class CheckForm(forms.Form):
+	# def __init__(self,*args,**kwargs):
+	# 	self.categs = kwargs.pop('categs')
+	# 	self.fields['dropcol'].initial = categs
+	# 	super(CheckForm, self).__init__(*args,**kwargs)
+
 	CHOICES = [(1,'Drop'),(2,'Mean'),(3,'Max'),(4,'Min')]
 	missing = forms.ChoiceField(label = 'Please indicate how you want to handle missing values', widget=forms.RadioSelect, choices=CHOICES)
-	indtar = forms.DecimalField(label = 'Please indicate the index of the prediction')
 	nametar = forms.CharField(label = 'Please indicate the name of the prediction')
-'''
-<input type="radio" id="mean" name="missing" value="mean">
-		<label for="male">Mean</label><br>
-		<input type="radio" id="max" name="missing" value="max">
-		<label for="female">Max</label><br>
-		<input type="radio" id="min" name="missing" value="min">
-		<label for="other">Min</label><br>
-		<input type="radio" id="drop" name="missing" value="drop">
-		<label for="other">Drop</label>
-	<br><br>
-	<div> Please enter the index of the Target </div>
-	<br>
-	<input type = 'text' class='indtar'/>
-	<br>
-	<br>
-	<div> Please enter the name of the Target </div>
-	<br>
-	<input type = 'text' class='target'/>
-	<br>
-	<br>
-
-'''
+	# dropcol = forms.MultipleChoiceField(required = False, label = 'Please select the column(s) you want to drop')

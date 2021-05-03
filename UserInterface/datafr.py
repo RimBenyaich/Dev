@@ -14,7 +14,6 @@ def readcsv(directory):
 			return df
 	return None
 
-
 #this function will save the categories of our dataset in our config file as well
 def get_columns(conf):
     directory = './' + get_data("project_name", conf)
@@ -27,3 +26,14 @@ def get_columns(conf):
 
     return lst
 
+def get_mod(pref):
+	if pref == 1:
+		mod = "CNN"
+	elif pref == 2:
+		mod = "ANN"
+	elif pref == 3:
+		mod = "Linear Regression"
+	elif pref == 4:
+		mod = "Logistric Regression"
+	else:
+		mod = "Any"

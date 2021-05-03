@@ -2,7 +2,23 @@
 {% load static %} {% block content %}
 
 <p> {{num}} lines were dropped. Your dataset is now clean</p>
-<p> Click the Next button to move on to the next phase "Transformation" </p>
-<button type='submit' name='btn' id='btn' class='btn' onclick="location.href = 'correlation/'>Next</button>
+Here are the correlations of the features with the {{target}}, select the ones you want to drop. <br>
+It is advised to delete the ones below 5% but you can keep them if necessary.</p>
+<form action = '{%url 'correlation'%}' method = "post">
+{% csrf_token %}
+{% for key, value in corr.items%} 
+    {%if key != target%}
+    <input type = 'checkbox' name = "dropitems">{{key}} 
+    - {{value|floatformat:4}} <br>
+    {%endif%}
+{% endfor %}
+<p> We will now be performing PCA that stands for Principal Component Analysis. PCA is <br>
+ a Dimension Reduction Technique that will help us reduce our number of features <br>
+by merging some of them into one component based on their co-variance. <br>
+For more information, click <a href = "https://towardsdatascience.com/a-one-stop-shop-for-principal-component-analysis-5582fb7e0a9c" target="_blank"> here </a>
+</p>
 
+<p> Click the Next button to move on to the next phase "Transformation" </p>
+<button type='submit' name='btn' id='btn' class='btn' >Next</button>
+</form>
 {% endblock %}

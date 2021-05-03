@@ -7,6 +7,8 @@ import os
 import datetime
 import json 
 import pandas as pd
+from pathlib import Path
+import shutil
 
 #this function will rename our csv file
 def renaming(directory, ext):
@@ -79,3 +81,14 @@ def get_config(directory):
 		if(file.endswith('.json')):
 			if(not file.endswith('template.json')):
 				return file 
+
+def delete(directory, conf):
+	p = Path(directory)
+	name = get_data("project_name", conf)
+	for file in os.listdir(directory):
+		if(file == name):
+			q = p / file
+			shutil.rmtree(q)
+		if(file.endswith('.json')):
+			if(not file.endswith('template.json')):
+				os.remove(file)

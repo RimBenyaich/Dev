@@ -8,16 +8,11 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def PC(df, lab, pos):
-	# if(pos == 'beginning'):
-	# 	X = df.iloc[:,lab:].values
-	# 	y = df.iloc[:,lab - 1].values #this is the prediction and the value doesn't change as they're integers
-	# else:
-	# 	X = df.iloc[:,:lab].values
-	# 	y = df.iloc[:,lab - 1].values #does not change as they are integers
+def corr(df, tar):
+	return df[df.columns[0:]].corr()[tar]
 
-	X, y = split(df,lab, pos)
-
+def PC(df, tar):
+	X, y = split(df,tar)
 
 	#we standarize our dataset here
 	X_std = StandardScaler().fit_transform(X)
@@ -31,9 +26,6 @@ def PC(df, lab, pos):
 	pca.fit(X_std)
 	data = pca.transform(X_std)
 
-	# print(X_std)
-	# print(len(X_std))
-
 	#this will display a chart of our components along with their variance
 	per = np.round(pca.explained_variance_ratio_* 100, decimals = 1)
 	labels = ['PC' + str(x) for x in range(1, len(per) + 1)]
@@ -45,21 +37,14 @@ def PC(df, lab, pos):
 	plt.show()
 
 	num = np.array(data)
-	# print(data)
-	# newd = pd.Series(num.tolist())
 	newd = pd.DataFrame(num)
-	# print(type(newd))
 	finaldf = pd.concat([newd, y], axis = 1)
 
 	return finaldf
+
+#this function will split our features from our prediction/target
+def split(df, tar):
+	X = df.loc[:, df.columns != 'tar']
+	y = df.loc[:, df.columns == 'tar']
 	
-
-def split(df, lab, pos):
-	if(pos == 'beginning'):
-		X = df.iloc[:,lab:].values
-		y = df.iloc[:,lab - 1] #this is the prediction and the value doesn't change as they're integers
-	else:
-		X = df.iloc[:,:lab].values
-		y = df.iloc[:,lab - 1].values #does not change as they are integers
-
 	return X, y

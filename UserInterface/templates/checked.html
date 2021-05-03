@@ -1,20 +1,25 @@
 {% extends 'base.html' %} 
 {% load static %} 
 {% block content %} 
-<p> Everything is in order! <p>
-<p> After checking your dataset, here are your columns:
-{{categs}}
-<p>
+Everything is in order! Your columns go as follows: </p>
+{%for col in categs%}
+<li>{{col}} 
+</li>
+{%endfor%}
+
 {% if num == 0 %}
-<p> After checking your dataset, there is no missing values </p>
-<button type='submit' value="Submit" class = 'btn' onclick="location.href = 'correlation/'">Next</button>
+<p> After checking your dataset, there is no missing values. 
+<button type='submit' value="Submit" class = 'btn' onclick="location.href = '{% url 'correlation' %}'">Next</button>
 
 {% else %}
 
-<p>There are {{num}} missing values </p>
-<p> The missing values are as follows: </p>
-{{dic}}
-<br>
+<br>There are {{num}} missing values. They go as follows:
+{% for key, value in dic.items%} 
+    {% if value > 0%}
+    <li>{{key}} - {{value}}</li>
+    {% endif%}
+{% endfor %}
+
 
 <form action='{%url 'clean'%}' method='POST'>
     {% csrf_token %}
