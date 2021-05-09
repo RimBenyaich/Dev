@@ -5,7 +5,6 @@ our config file
 '''
 import pandas as pd
 import numpy as np
-import pca 
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import train_test_split

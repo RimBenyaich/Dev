@@ -39,6 +39,6 @@ class DFModel(models.Model):
     yr_renovated = models.FloatField() # min: 0.0, max: 2015.0, mean: 84.42178822658275
     zipcode = models.FloatField() # min: 98001.0, max: 98199.0, mean: 98077.94719548315
     lat = models.FloatField() # min: 47.1559, max: 47.7776, mean: 47.560068220103666
-    long = models.FloatField() # min: -122.519, max: -121.315, mean: -122.21389323398739
+    longi = models.FloatField() # min: -122.519, max: -121.315, mean: -122.21389323398739
     sqft_living15 = models.PositiveSmallIntegerField() # min: 399, max: 6210, mean: 1986.641475379489
     sqft_lot15 = models.IntegerField() # min: 651, max: 871200, mean: 12768.911329137356

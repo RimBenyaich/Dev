@@ -9,7 +9,5 @@
     "missing": "",
     "prediction": "",
     "cols": [""],
-    "lines counter after cleaning": -1,
-    "epochs": 50,
-    "alpha": 0.1
+    "lines counter after cleaning": -1
 }

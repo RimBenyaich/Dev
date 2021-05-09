@@ -15,14 +15,19 @@ from .check import check_ext
 from .check import check_missing
 from .check import missingcount
 from .datafr import get_columns
+from .datafr import readcsv
 from .clean import handlemiss
 from .modelrep import get_model_repr
 from .pca import split
 from .pca import corr
 from .files import delete
 from .gen_mod_py import generate
+from .model import train_GBR
+from .model import train_LR
+from .genform import generateform
+from .genform import genere
 import os
-from .models import DFModel
+# from .models import DFModel
 # https://drive.google.com/drive/u/0/folders/1SfNihWNYJQPsniZ-yjQN6lgl1sUYw6RL
 
 conf = ''
@@ -47,15 +52,16 @@ def UI(request):
 			form.cleaned_data
 			init_conf(conf)
 			save_to_config_form(request, form, conf)
-
 			return render(request, 'download.html', { 'conf': conf})
 	else:
 		form = HomeForm()
 	return render(request, 'home.html', {'form': form})
 
 def checking(request):
-	directory = os.getcwd();
+	directory = os.getcwd()
+	strcnt = 0
 	message = ""
+	dt = {}
 
 	conf = get_config(directory)
 	message = checks(conf)
@@ -64,17 +70,26 @@ def checking(request):
 		print(message)
 		delete(directory, conf)
 		return render(request, 'notchecked.html', {'message': message})
+	dire = './' + get_data("project_name", conf)
+	df = readcsv(dire)
 	categs = get_columns(conf)
 	num = missingcount(conf)
 	dic = check_missing(conf)
+	for key, value in dic.items():
+		if value > 0:
+			dt[key] = df.dtypes[key]
+			# print(key)
+			# print(dt[key])
+			if dt[key] == "object":
+				strcnt += 1
 	cnt = len(categs)
-	# print(num)
 	if(num == 0):
+		form = CheckForm()
 		return render(request, 'checked.html', {'num': num, 'categs': categs})
 	else:
 		form = CheckForm()
-		return render(request, 'checked.html', {'num': num, 'dic': dic, 'form': form, 'categs': categs, 'cnt': cnt})
-
+		return render(request, 'checked.html', {'num': num, 'dic': dic, 'form': form, 'categs': categs, 'cnt': cnt, 'dt': dt})
+		
 def clean(request):
 	curr = os.getcwd()
 	dic = [""]
@@ -106,8 +121,11 @@ def clean(request):
 			#here I'll need to generate the model for my df and save it there
 			# X, y = split(df, nametar)
 			correl = corr(df, nametar)
-			generate(get_model_repr(df))
-			return render(request, 'clean.html', {'conf': conf, 'num': newnum, 'df': df, 'corr': correl, 'target': nametar})
+			newf = generateform(correl, nametar)
+			genere(newf)
+			df.to_csv('cleaned.csv', index = False)
+			# generate(get_model_repr(df))
+			return render(request, 'clean.html', {'conf': conf, 'num': newnum, 'corr': correl, 'target': nametar})
 			# return HttpResponse(df.to_html())
 	else:
 		form = CheckForm()
@@ -117,31 +135,56 @@ def clean(request):
 def correlation(request):
 	message = ""
 	items = []
+	curr = os.getcwd()
+	df = readcsv(curr)
+	# print(df)
+	'''
+	I need to generate a form that has checkboxes depending on the correlation table
+	'''
 	if request.method == 'POST':
+		form = DropFeat(request.POST)
 		message = "Items are about to be dropped"
-		items = request.POST.getlist('dropitems')
-		print(items)
+		# items = request.POST.getlist('dropitems')
+		# items = request.POST.get('dropitems')
+		# print(items)
 		#We make changes on df aka drop the selected columns and return the new df
-
-		return render(request, 'correlation.html', {"items": items})
+		return render(request, 'correlation.html', {"items": items, "form": form})
 		# for i in items:
 		# 	print(i)
 	else:
+		form = DropFeat()
 		message = "No feature was dropped"
 		print(message)
 	df = request.GET.get('df', '')
 	# else return old df
-	return render(request, 'correlation.html', {"items": items})
+	return render(request, 'correlation.html', {"form": form})
 
-# def correlation(request):
-# 	message = ""
-# 	if "checkbox" in request.POST:
-# 		items = request.POST.getlist('dropitems')
-# 		print(items)
-# 		# for i in items:
-# 		# 	print(i)
-# 	else:
-# 		message = "No feature was dropped"
-# 	df = request.GET.get('df', '')
-# 	# print(df)
-# 	return render(request, 'correlation.html', {"items": items})
+def modelling(request):
+	directory = os.getcwd();
+	message = ""
+	X, y = 0
+
+	conf = get_config(directory)
+
+	mod = get_data("preferred", conf)
+	c = get_data("choice", conf)
+
+	if(mod == 1 or mod == 2):
+		if(c == 1 or c == 2 or c == 3 or c == 4):
+			message = "There is no image folder for the Neural Network so another model will be selected"
+			mod = 3
+	elif(mod == 3 or mod == 4):
+		if(c== 5 or c == 6 or c == 7 or c == 8):
+				message = "There is an image folder that shouldn't be there so another model will be selected"
+				mod = 1
+	else:
+		if(c == 1 or c == 2 or c == 3 or c == 4):
+			mod = 3
+		else:
+			mod = 1
+	if mod == 3:
+		acc1 = train_LR(X, y)
+		acc2 = train_GBR(X, y)
+
+
+	return render(request, 'model.html', {'message': message})

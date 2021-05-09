@@ -6,7 +6,6 @@ urlpatterns = [
     path('checking/', views.checking, name = 'checking'),
     path('clean/', views.clean, name= 'clean'),
     path('correlation/', views.correlation, name = "correlation"),
-    # path('model/', views.model, name = "model"),
+    path('modelling/', views.modelling, name = "modelling")
     # path('final/', views.final, name = "final"),
-    #path('clean/', views.clean, name = 'clean'),
 ]

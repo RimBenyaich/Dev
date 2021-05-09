@@ -67,7 +67,13 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
         },
+        #  'libraries':{
+        #                 'customfilter':  'UserInterface.templatetags.customfilter',
+ 
+        # },       
     },
+
+    
 ]
 
 WSGI_APPLICATION = 'ui.wsgi.application'

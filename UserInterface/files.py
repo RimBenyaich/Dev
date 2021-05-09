@@ -31,7 +31,7 @@ def save_to_config_form(request, form, conf):
 
 	for key, value in form.cleaned_data.items():
 		if value:
-			if(isinstance(value, int)):
+			if(value.isnumeric()):
 				js[key] = int(value)
 			else:
 				js[key] = value
@@ -44,7 +44,7 @@ def save_to_config_form(request, form, conf):
 #this function will save to our config file everything calculated (file cnt, lines cnt, etc..)
 def save_to_config_func(data, categ, conf):
 	f = open(conf)
-	dt = json.load(f) 
+	dt = json.load(f)
 	dt[categ] = data
 
 	with open(conf, 'w') as fp:
@@ -92,3 +92,8 @@ def delete(directory, conf):
 		if(file.endswith('.json')):
 			if(not file.endswith('template.json')):
 				os.remove(file)
+
+def get_csvpath(directory, conf):
+	name = get_data("project_name", conf)
+	
+	

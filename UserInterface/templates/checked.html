@@ -14,9 +14,11 @@ Everything is in order! Your columns go as follows: </p>
 {% else %}
 
 <br>There are {{num}} missing values. They go as follows:
+{% comment %} {% load customfilter %} {% endcomment %}
 {% for key, value in dic.items%} 
     {% if value > 0%}
     <li>{{key}} - {{value}}</li>
+     {% comment %} - {{dt[key]}} - {{ dt|get_item:key }} {% endcomment %}
     {% endif%}
 {% endfor %}
 
