@@ -34,7 +34,7 @@ def checks(conf):
 		elif(cnt == 1):
 			if(check_ext(directory, ".csv")):
 				message = "check"
-				df = readcsv(directory)
+				df = readcsv(directory, 'none')
 				linescnt = len(df)
 				save_to_config_func(linescnt, "lines counter", conf)
 				save_to_config_func(cnt, "files counter", conf)
@@ -95,7 +95,7 @@ def check_ext(directory, ext):
 #this function will check the missing values in every category and their datatype
 def check_missing(conf):
 	directory = './' + get_data("project_name", conf)
-	df = readcsv(directory)
+	df = readcsv(directory, 'none')
 	res = df.isnull().sum()
 
 	return res
@@ -103,7 +103,7 @@ def check_missing(conf):
 #this function will return the count of missing values in all our dataset
 def missingcount(conf):
 	directory = './' + get_data("project_name", conf)
-	df = readcsv(directory)
+	df = readcsv(directory, 'none')
 	s = df.isnull().sum().sum()
 
 	return s

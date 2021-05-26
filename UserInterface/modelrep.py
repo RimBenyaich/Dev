@@ -4,10 +4,11 @@ import collections
 import math
 import re
 import unicodedata
+from numpy import unicode_
 
 
 def translit(s):
-    return unicodedata.normalize('NFKC', unicode(s))
+    return unicodedata.normalize('NFKC', unicode_(s))
 
 
 def camel_case(s):

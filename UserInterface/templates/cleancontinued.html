@@ -1,0 +1,21 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block content %} 
+
+{%if cnt != 0%}
+
+<p> {{message}} </p>
+ {%for i in items%}
+{{i}} <br>
+{%endfor%} 
+
+{%endif%}
+<form action='{%url 'correlation'%}' method='POST'>
+{% csrf_token %}
+{{form.as_p}}
+
+<button type='submit' name='btn' id='btn' class='btn'>Submit</button>
+</form>
+
+
+{% endblock %}

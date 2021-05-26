@@ -82,6 +82,7 @@ def get_config(directory):
 			if(not file.endswith('template.json')):
 				return file 
 
+#this function will delete the config file after the user downloads it and exits the website
 def delete(directory, conf):
 	p = Path(directory)
 	name = get_data("project_name", conf)
@@ -93,7 +94,11 @@ def delete(directory, conf):
 			if(not file.endswith('template.json')):
 				os.remove(file)
 
+#gets the csv path by taking its name from our config file
 def get_csvpath(directory, conf):
 	name = get_data("project_name", conf)
-	
+
+# def getdtdic(value):
+# 	l = len(value)
+# 	return value[2:l - 3]
 	

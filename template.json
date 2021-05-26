@@ -6,8 +6,12 @@
     "files counter": -1,
     "lines counter": -1,
     "categories": [""],
+    "datatype": "",
+    "missing values datatype": {},
     "missing": "",
+    "choicehandle": -1,
+    "handlecolcnt": -1,
     "prediction": "",
-    "cols": [""],
-    "lines counter after cleaning": -1
+    "lines counter after cleaning": -1,
+    "colstodrop": []
 }

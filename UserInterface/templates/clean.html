@@ -3,10 +3,9 @@
 
 <p> {{num}} lines were dropped. Your dataset is now clean</p>
 Here are the correlations of the features with the {{target}}, select the ones you want to drop. <br>
-We only displayed the ones below 5% but you can keep them.</p>
-<form action = '{%url 'correlation'%}' method = "post">
+It is advised to drop the ones closest to 0, but you can keep them or drop other features if desired.</p>
+<form action = '{%url 'cleancontinued'%}' method = "POST">
 {% csrf_token %}
-{% comment %} {{form.as_p}} {% endcomment %}
 {{ form.as_p }}
 {% comment %} {% for key, value in corr.items%} 
     {%if key != target and value < 0.05%}

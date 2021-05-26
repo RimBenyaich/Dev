@@ -2,9 +2,7 @@
 {% load static %} 
 {% block content %} 
 
-<p> Our new components will be as follows. </p>
- {%for i in items%}
-{{i}} <br>
-{%endfor%} 
-
+<img src={% static 'images/foo.png' %} class="center" alt = "Principal Component Analysis">
+<br>
+<button type='submit' value="Submit" class = 'btn' onclick="location.href = '{% url 'modelling' %}'">Next</button>
 {% endblock %}

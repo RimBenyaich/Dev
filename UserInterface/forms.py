@@ -1,3 +1,7 @@
+'''
+Here will be our form in addition to the one that will be generated depending on the DF
+for dropping features
+'''
 from django import forms
 
 class HomeForm(forms.Form):
@@ -9,54 +13,31 @@ class HomeForm(forms.Form):
 	preferred = forms.ChoiceField(label= 'Model preferred', choices=CHOICES)
 
 class CheckForm(forms.Form):
-	# def __init__(self,*args,**kwargs):
-	# 	self.categs = kwargs.pop('categs')
-	# 	self.fields['dropcol'].initial = categs
-	# 	super(CheckForm, self).__init__(*args,**kwargs)
-
 	CHOICES = [(1,'Drop'),(2,'Mean'),(3,'Max'),(4,'Min')]
 	missing = forms.ChoiceField(label = 'Please indicate how you want to handle missing values', widget=forms.RadioSelect, choices=CHOICES)
 	nametar = forms.CharField(label = 'Please indicate the name of the prediction')
-	# dropcol = forms.MultipleChoiceField(required = False, label = 'Please select the column(s) you want to drop')
+	
+class TransformForm(forms.Form):
+	CHOICES = [(1,'Principle Component Analysis'),(2,'Linear Discriminent Analysis'),(3,'Factor Analysis')] #,(3,'Max'),(4,'Min')
 
+	technique = forms.ChoiceField(label = 'Please indicate the Dimension Reduction technique desired', widget=forms.RadioSelect, choices=CHOICES)
 class DropFeat(forms.Form):
-	ids = forms.BooleanField(required = False, label = "-0.0169")
-	bedrooms = forms.BooleanField(required = False, label = "0.3083")
-	bathrooms = forms.BooleanField(required = False, label = "0.5252")
-	sqft_living = forms.BooleanField(required = False, label = "0.7021")
-	sqft_lot = forms.BooleanField(required = False, label = "0.0897")
-	floors = forms.BooleanField(required = False, label = "0.2568")
-	waterfront = forms.BooleanField(required = False, label = "0.2664")
-	view = forms.BooleanField(required = False, label = "0.3974")
-	condition = forms.BooleanField(required = False, label = "0.0364")
-	grade = forms.BooleanField(required = False, label = "0.6674")
-	sqft_above = forms.BooleanField(required = False, label = "0.6056")
-	sqft_basement = forms.BooleanField(required = False, label = "0.3238")
-	yr_built = forms.BooleanField(required = False, label = "0.0539")
-	yr_renovated = forms.BooleanField(required = False, label = "0.1264")
-	zipcode = forms.BooleanField(required = False, label = "-0.0533")
-	lat = forms.BooleanField(required = False, label = "0.3070")
-	longi = forms.BooleanField(required = False, label = "0.0216")
-	sqft_living15 = forms.BooleanField(required = False, label = "0.5854")
-	sqft_lot15 = forms.BooleanField(required = False, label = "0.0824")
-
-class DropFeat(forms.Form):
-	ids = forms.BooleanField(required = False, label = "-0.0169")
-	bedrooms = forms.BooleanField(required = False, label = "0.3083")
-	bathrooms = forms.BooleanField(required = False, label = "0.5252")
-	sqft_living = forms.BooleanField(required = False, label = "0.7021")
-	sqft_lot = forms.BooleanField(required = False, label = "0.0897")
-	floors = forms.BooleanField(required = False, label = "0.2568")
-	waterfront = forms.BooleanField(required = False, label = "0.2664")
-	view = forms.BooleanField(required = False, label = "0.3974")
-	condition = forms.BooleanField(required = False, label = "0.0364")
-	grade = forms.BooleanField(required = False, label = "0.6674")
-	sqft_above = forms.BooleanField(required = False, label = "0.6056")
-	sqft_basement = forms.BooleanField(required = False, label = "0.3238")
-	yr_built = forms.BooleanField(required = False, label = "0.0539")
-	yr_renovated = forms.BooleanField(required = False, label = "0.1264")
-	zipcode = forms.BooleanField(required = False, label = "-0.0533")
-	lat = forms.BooleanField(required = False, label = "0.3070")
-	longi = forms.BooleanField(required = False, label = "0.0216")
-	sqft_living15 = forms.BooleanField(required = False, label = "0.5854")
-	sqft_lot15 = forms.BooleanField(required = False, label = "0.0824")
+	ids = forms.BooleanField(required = False, label="ids - -0.0169",initial = False)
+	bedrooms = forms.BooleanField(required = False, label="bedrooms - 0.3083",initial = False)
+	bathrooms = forms.BooleanField(required = False, label="bathrooms - 0.5252",initial = False)
+	sqft_living = forms.BooleanField(required = False, label="sqft_living - 0.7021",initial = False)
+	sqft_lot = forms.BooleanField(required = False, label="sqft_lot - 0.0897",initial = False)
+	floors = forms.BooleanField(required = False, label="floors - 0.2568",initial = False)
+	waterfront = forms.BooleanField(required = False, label="waterfront - 0.2664",initial = False)
+	view = forms.BooleanField(required = False, label="view - 0.3974",initial = False)
+	condition = forms.BooleanField(required = False, label="condition - 0.0364",initial = False)
+	grade = forms.BooleanField(required = False, label="grade - 0.6674",initial = False)
+	sqft_above = forms.BooleanField(required = False, label="sqft_above - 0.6056",initial = False)
+	sqft_basement = forms.BooleanField(required = False, label="sqft_basement - 0.3238",initial = False)
+	yr_built = forms.BooleanField(required = False, label="yr_built - 0.0539",initial = False)
+	yr_renovated = forms.BooleanField(required = False, label="yr_renovated - 0.1264",initial = False)
+	zipcode = forms.BooleanField(required = False, label="zipcode - -0.0533",initial = False)
+	lat = forms.BooleanField(required = False, label="lat - 0.3070",initial = False)
+	longi = forms.BooleanField(required = False, label="longi - 0.0216",initial = False)
+	sqft_living15 = forms.BooleanField(required = False, label="sqft_living15 - 0.5854",initial = False)
+	sqft_lot15 = forms.BooleanField(required = False, label="sqft_lot15 - 0.0824",initial = False)

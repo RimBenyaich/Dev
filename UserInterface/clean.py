@@ -8,10 +8,12 @@ from .files import save_to_config_func
 
 #So far, we only handled the drop case
 def handlemiss(choice, directory):
-    df = readcsv(directory)
+    df = readcsv(directory, 'none')
     if(choice == "drop"):
         df.dropna(axis = 0, how='any', inplace = True)
         return df
-
+    #X.fillna(X.mean(), inplace=True)
+    #X.fillna(X.min(), inplace=True)
+    #X.fillna(X.max(), inplace=True)
 
 #TODO Handle the other cases (Mean, min, max) with categorical values and for every categegory
