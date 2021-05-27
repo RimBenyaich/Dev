@@ -4,6 +4,14 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+django = "*"
+djongo = "*"
+djangorestframework = "*"
+django-rest-framework-mongoengine = "*"
+bs4 = "*"
+pandas = "*"
+sklearn = "*"
+matplotlib = "*"
 
 [dev-packages]
 
