@@ -21,8 +21,10 @@ class TransformForm(forms.Form):
 	CHOICES = [(1,'Principle Component Analysis'),(2,'Linear Discriminent Analysis'),(3,'Factor Analysis')] #,(3,'Max'),(4,'Min')
 
 	technique = forms.ChoiceField(label = 'Please indicate the Dimension Reduction technique desired', widget=forms.RadioSelect, choices=CHOICES)
+
 class DropFeat(forms.Form):
 	ids = forms.BooleanField(required = False, label="ids - -0.0169",initial = False)
+	date = forms.BooleanField(required = False, label="date - 0.0030",initial = False)
 	bedrooms = forms.BooleanField(required = False, label="bedrooms - 0.3083",initial = False)
 	bathrooms = forms.BooleanField(required = False, label="bathrooms - 0.5252",initial = False)
 	sqft_living = forms.BooleanField(required = False, label="sqft_living - 0.7021",initial = False)

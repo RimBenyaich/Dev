@@ -86,7 +86,7 @@ def checking(request):
 	for key, value in dic.items():
 		if value > 0:
 			dt[key] = str(df.dtypes[key])
-	
+	print(dic)
 	save_to_config_func(dt, 'missing values datatype', conf)
 	cnt = len(categs)
 	if(num == 0):
@@ -194,7 +194,6 @@ def cleancontinued(request):
 			form = TransformForm()
 
 			return render(request, 'cleancontinued.html', {"items": items, "form": form, 'message': message, 'cnt': cnt})		
-		
 	else:
 		form = DropFeat()
 	return render(request, 'clean.html', {"form": form})
@@ -306,24 +305,3 @@ class DropFeat(forms.Form):
 	sqft_living15 = forms.BooleanField(required = False, label="sqft_living15 - 0.5854",initial = False)
 	sqft_lot15 = forms.BooleanField(required = False, label="sqft_lot15 - 0.0824",initial = False)
 
-class DropFeat(forms.Form):
-	ids = forms.BooleanField(required = False, label="ids - -0.0169",initial = False)
-	date = forms.BooleanField(required = False, label="date - 0.0030",initial = False)
-	bedrooms = forms.BooleanField(required = False, label="bedrooms - 0.3083",initial = False)
-	bathrooms = forms.BooleanField(required = False, label="bathrooms - 0.5252",initial = False)
-	sqft_living = forms.BooleanField(required = False, label="sqft_living - 0.7021",initial = False)
-	sqft_lot = forms.BooleanField(required = False, label="sqft_lot - 0.0897",initial = False)
-	floors = forms.BooleanField(required = False, label="floors - 0.2568",initial = False)
-	waterfront = forms.BooleanField(required = False, label="waterfront - 0.2664",initial = False)
-	view = forms.BooleanField(required = False, label="view - 0.3974",initial = False)
-	condition = forms.BooleanField(required = False, label="condition - 0.0364",initial = False)
-	grade = forms.BooleanField(required = False, label="grade - 0.6674",initial = False)
-	sqft_above = forms.BooleanField(required = False, label="sqft_above - 0.6056",initial = False)
-	sqft_basement = forms.BooleanField(required = False, label="sqft_basement - 0.3238",initial = False)
-	yr_built = forms.BooleanField(required = False, label="yr_built - 0.0539",initial = False)
-	yr_renovated = forms.BooleanField(required = False, label="yr_renovated - 0.1264",initial = False)
-	zipcode = forms.BooleanField(required = False, label="zipcode - -0.0533",initial = False)
-	lat = forms.BooleanField(required = False, label="lat - 0.3070",initial = False)
-	longi = forms.BooleanField(required = False, label="longi - 0.0216",initial = False)
-	sqft_living15 = forms.BooleanField(required = False, label="sqft_living15 - 0.5854",initial = False)
-	sqft_lot15 = forms.BooleanField(required = False, label="sqft_lot15 - 0.0824",initial = False)
