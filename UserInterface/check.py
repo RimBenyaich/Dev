@@ -37,11 +37,15 @@ def checks(conf):
 				df = readcsv(directory, 'none')
 				linescnt = len(df)
 				save_to_config_func(linescnt, "lines counter", conf)
+				# print("JEJE")
 				save_to_config_func(cnt, "files counter", conf)
+				# print("JOJO")
+
 			else:
 				message = "There are files with undeclared extensions"
 	else:
 		message = "The chosen format does not match the downloaded files"
+	# print("CBON")
 	return message
 	
 		# if(c == 1 or c == 3 or c == 6 or c == 7):

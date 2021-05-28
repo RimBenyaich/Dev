@@ -72,6 +72,12 @@ def colcnt(df):
 	
 	return cnt
 
+# def getmissnum(dic):
+# 	d = []
+
+# 	for key in dic:
+
+
 # def getdt(df):
 # 	dt = df.dtypes
 

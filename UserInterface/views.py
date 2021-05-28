@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django import forms
 from django.http import HttpResponse
 from .forms import HomeForm, TransformForm
-from .forms import CheckForm
 from .downloadfromgd import recurs_folders
 from .files import renaming
 from .files import rename_conf
@@ -19,9 +18,9 @@ from .datafr import dropcols, get_columns
 from .datafr import readcsv
 from .clean import handlemiss
 from .modelrep import get_model_repr
-from .pca import split
-from .pca import corr
-from .pca import PC
+from .Transform import split
+from .Transform import corr
+from .Transform import pca
 from .files import delete
 from .gen_mod_py import generate
 from .model import train_GBR
@@ -32,6 +31,7 @@ from .datafr import getcols
 from .datafr import getdt
 from .datafr import colcnt
 from .datafr import getdt
+from .genform import gencleanform
 import numpy as np
 import pandas as pd
 import os
@@ -76,6 +76,7 @@ def checking(request):
 	message = checks(conf)
 	
 	if(message != "check"):
+		# print('HERE')
 		delete(directory, conf)
 		return render(request, 'notchecked.html', {'message': message})
 	dire = './' + get_data("project_name", conf)
@@ -86,8 +87,10 @@ def checking(request):
 	for key, value in dic.items():
 		if value > 0:
 			dt[key] = str(df.dtypes[key])
-	print(dt)
+	
 	save_to_config_func(dt, 'missing values datatype', conf)
+	out = gencleanform(dic, dt)
+	genere(out)
 	cnt = len(categs)
 	if(num == 0):
 		form = CheckForm()
@@ -99,35 +102,49 @@ def checking(request):
 #Here, we will be handling the missing values
 def clean(request):
 	curr = os.getcwd()
-	dic = [""]
+	conf = get_config(curr)
+	dic = []
+	nums = {}
+	categs = {}
+	x = 0
 	num = 0
+	d = []
 	if request.method == 'POST':
 		form = CheckForm(request.POST)
 		if form.is_valid():
-			missing = request.POST.get('missing')
+			# Here will be the for loop that will regroup our handling for each missing value
+			dic = get_data("missing values datatype",conf)
+			# print(dic)
+			for key in dic:
+				if(dic[key] == 'float64' or dic[key] == 'int64'):
+					x = int(request.POST.get(key))
+					if(x == 1):
+						nums[key] = "Drop"
+					elif x == 2:
+						nums[key] = "Mean"
+					elif x == 3:
+						nums[key] = "Max"
+					else:
+						nums[key] = "Min"
+				else:
+					categs[key] = int(request.POST.get(key))
+					if(x == 1):
+						nums[key] = "Drop"
+					elif x == 2:
+						nums[key] = "Mode"
 			nametar = request.POST.get('nametar')
-			missing = int(missing)
-			if missing == 1:
-				way = "drop"
-			elif missing == 2:
-				way = "mean"
-			elif missing == 3:
-				way = "max"
-			else:
-				way = "min"
-			conf = get_config(curr)
-			dic = check_missing(conf)
+			save_to_config_func(nums, 'handlemissingnums', conf)
+			save_to_config_func(categs, 'handlemissingcategs', conf)
 			directory = './' + get_data("project_name", conf)
 			num = get_data("lines counter", conf)
-			save_to_config_func(way, 'missing', conf)
 			save_to_config_func(nametar, 'prediction', conf)
-			df = handlemiss(way, directory)
+			df = handlemiss(nums, categs, directory)
 			x = len(df[nametar].unique())
 			newnum = num - len(df)
 			save_to_config_func(len(df), "lines counter after cleaning", conf)
 			#here I'll need to generate the model for my df and save it there
 			# X, y = split(df, nametar)
-			
+
 			#Here we will be transforming our categorical values
 			obj_df = df.select_dtypes(include=['object']).copy()
 			for col in obj_df:
@@ -171,24 +188,24 @@ def cleancontinued(request):
 	df = readcsv(pth, 'none')
 
 	#I generated a form that has checkboxes depending on the correlation table
-	if request.method == 'POST':
+	if request.method == 'POST' or None:
 		categs = getcols(df)
-		form = DropFeat(request.POST)
+		form = DropFeat(request.POST or None)
 		for col in categs:
 			if request.POST.get(col) == 'on':
 				items.append(col)
 				cnt += 1
 		# print
 		if cnt == 0:
-			# print("CNT == 0")
-			df.to_csv('fullytransformed.csv', index = False)
+			df.to_csv('fullycleaned.csv', index = False)
 			if os.path.exists("cleaned.csv"):
 				os.remove("cleaned.csv") 
 			message = "No columns will be dropped"
+			
+			form = TransformForm()
 			return render(request, 'cleancontinued.html', {'form': form, 'message': message, 'cnt': cnt})
 		else:
 			#We make changes on df aka drop the selected columns and return the new df
-			# print("CNT != 0")
 			save_to_config_func(items, 'colstodrop', conf)
 			newdf = dropcols(items, df)
 			#Haven't decided yet whether we should delete cleaned.csv and keep fullycleaned or keep them both
@@ -200,7 +217,12 @@ def cleancontinued(request):
 			return render(request, 'cleancontinued.html', {"items": items, "form": form, 'message': message, 'cnt': cnt})		
 	else:
 		form = DropFeat()
-	return render(request, 'clean.html', {"form": form})
+		# df.to_csv('fullycleaned.csv', index = False)
+		# if os.path.exists("cleaned.csv"):
+		# 	os.remove("cleaned.csv") 
+		# message = "No columns will be dropped"
+		# form = TransformForm()
+	return render(request, 'clean.html', {"items": items, 'message': message, 'cnt': cnt})
 
 def correlation(request):
 	cnt = 0
@@ -239,7 +261,7 @@ def correlation(request):
 		
 		if(transform == '1'): #PCA
 			tar = get_data('prediction',conf)
-			final = PC(df, tar)
+			final = pca(df, tar)
 			# print(final)
 			final.to_csv('transformed.csv', index = False)
 			cnt = colcnt(final)
@@ -291,27 +313,15 @@ def modelling(request):
 
 	return render(request, 'model.html', {'message': message, 'mod': mod, 'chosen': chosen, 'acc': cc})
 
-class DropFeat(forms.Form):
-	ids = forms.BooleanField(required = False, label="ids - -0.0169",initial = False)
-	date = forms.BooleanField(required = False, label="date - 0.0030",initial = False)
-	bedrooms = forms.BooleanField(required = False, label="bedrooms - 0.3083",initial = False)
-	bathrooms = forms.BooleanField(required = False, label="bathrooms - 0.5252",initial = False)
-	sqft_living = forms.BooleanField(required = False, label="sqft_living - 0.7021",initial = False)
-	sqft_lot = forms.BooleanField(required = False, label="sqft_lot - 0.0897",initial = False)
-	floors = forms.BooleanField(required = False, label="floors - 0.2568",initial = False)
-	waterfront = forms.BooleanField(required = False, label="waterfront - 0.2664",initial = False)
-	view = forms.BooleanField(required = False, label="view - 0.3974",initial = False)
-	condition = forms.BooleanField(required = False, label="condition - 0.0364",initial = False)
-	grade = forms.BooleanField(required = False, label="grade - 0.6674",initial = False)
-	sqft_above = forms.BooleanField(required = False, label="sqft_above - 0.6056",initial = False)
-	sqft_basement = forms.BooleanField(required = False, label="sqft_basement - 0.3238",initial = False)
-	yr_built = forms.BooleanField(required = False, label="yr_built - 0.0539",initial = False)
-	yr_renovated = forms.BooleanField(required = False, label="yr_renovated - 0.1264",initial = False)
-	zipcode = forms.BooleanField(required = False, label="zipcode - -0.0533",initial = False)
-	lat = forms.BooleanField(required = False, label="lat - 0.3070",initial = False)
-	longi = forms.BooleanField(required = False, label="longi - 0.0216",initial = False)
-	sqft_living15 = forms.BooleanField(required = False, label="sqft_living15 - 0.5854",initial = False)
-	sqft_lot15 = forms.BooleanField(required = False, label="sqft_lot15 - 0.0824",initial = False)
+class CheckForm(forms.Form):
+	CHOICES1 = [(1,'Drop'),(2,'Mean'),(3,'Max'),(4,'Min')]
+	bathrooms = forms.ChoiceField(label = 'bathrooms has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	view = forms.ChoiceField(label = 'view has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	sqft_above = forms.ChoiceField(label = 'sqft_above has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	yr_renovated = forms.ChoiceField(label = 'yr_renovated has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	zipcode = forms.ChoiceField(label = 'zipcode has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	nametar = forms.CharField(label = 'Please indicate the name of the prediction')
+
 
 class DropFeat(forms.Form):
 	ids = forms.BooleanField(required = False, label="ids - -0.0169",initial = False)
@@ -334,3 +344,4 @@ class DropFeat(forms.Form):
 	longi = forms.BooleanField(required = False, label="longi - 0.0216",initial = False)
 	sqft_living15 = forms.BooleanField(required = False, label="sqft_living15 - 0.5854",initial = False)
 	sqft_lot15 = forms.BooleanField(required = False, label="sqft_lot15 - 0.0824",initial = False)
+

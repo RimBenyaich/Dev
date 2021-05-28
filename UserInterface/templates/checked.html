@@ -13,16 +13,16 @@ Everything is in order! Your columns go as follows: </p>
 
 {% else %}
 
-<br>There are {{num}} missing values. They go as follows:
+<br>There are {{num}} missing values.
+
 {% comment %} {% load customfilter %} {% endcomment %}
+ {% comment %} They go as follows:
 {% for key, value in dic.items%} 
     {% if value > 0%}
-    <li>{{key}} - {{value}}</li>
-     {% comment %} - {{dt[key]}} - {{ dt|get_item:key }} {% endcomment %}
-    {% endif%}
-{% endfor %}
-
-
+    <li>{{key}} - {{value}}</li> {% endcomment %} 
+    {% comment %} {% endif%}
+{% endfor %} {% endcomment %}
+<p>Please indicate how you want to handle each of the missing values:</p>
 <form action='{%url 'clean'%}' method='POST'>
     {% csrf_token %}
     {{ form.as_p }}

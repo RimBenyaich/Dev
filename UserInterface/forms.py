@@ -12,11 +12,6 @@ class HomeForm(forms.Form):
 	CHOICES = [(1,"CNN"),(2,"ANN"),(3,"Linear Regression"),(4,"Logistic Regression"),(5,"Any")]
 	preferred = forms.ChoiceField(label= 'Model preferred', choices=CHOICES)
 
-class CheckForm(forms.Form):
-	CHOICES = [(1,'Drop'),(2,'Mean'),(3,'Max'),(4,'Min')]
-	missing = forms.ChoiceField(label = 'Please indicate how you want to handle missing values', widget=forms.RadioSelect, choices=CHOICES)
-	nametar = forms.CharField(label = 'Please indicate the name of the prediction')
-	
 class TransformForm(forms.Form):
 	CHOICES = [(1,'Principle Component Analysis'),(2,'Linear Discriminent Analysis'),(3,'Factor Analysis')] #,(3,'Max'),(4,'Min')
 

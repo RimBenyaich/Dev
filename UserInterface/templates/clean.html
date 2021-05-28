@@ -1,7 +1,7 @@
 {% extends 'base.html' %} 
 {% load static %} {% block content %}
 
-<p> {{num}} lines were dropped. Your dataset is now clean</p>
+<p> {{num}} lines were taken care of. Your dataset is now clean</p>
 Here are the correlations of the features with the {{target}}, select the ones you want to drop. <br>
 It is advised to drop the ones closest to 0, but you can keep them or drop other features if desired.</p>
 <form action = '{%url 'cleancontinued'%}' method = "POST">
