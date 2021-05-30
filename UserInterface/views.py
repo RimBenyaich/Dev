@@ -21,6 +21,8 @@ from .modelrep import get_model_repr
 from .Transform import split
 from .Transform import corr
 from .Transform import pca
+from .Transform import LDA
+from .Transform import FA
 from .files import delete
 from .gen_mod_py import generate
 from .model import train_GBR
@@ -32,6 +34,7 @@ from .datafr import getdt
 from .datafr import colcnt
 from .datafr import getdt
 from .genform import gencleanform
+from .files import cleanfiles
 import numpy as np
 import pandas as pd
 import os
@@ -46,6 +49,8 @@ path = ''
 def UI(request):
 	conf = 'config_'
 	mod = ''
+	curr = os.getcwd() + '/'
+	direct = curr + "downloadable/"
 	if request.method == 'POST':
 		form = HomeForm(request.POST)
 		if form.is_valid():
@@ -53,9 +58,9 @@ def UI(request):
 			url = request.POST.get('url')
 			new_r = url.split('/')[-1]
 			cnt = 0
-			path = './' + project_name
-			new_conf = path + conf
-			conf = rename_conf(path, conf, project_name)
+			path = curr + project_name + '/'
+			new_conf = direct + conf
+			conf = rename_conf(direct, conf, project_name)
 			cnt = recurs_folders(new_r, cnt, path + '/')
 			renaming(path, '.csv')
 			form.cleaned_data
@@ -69,17 +74,18 @@ def UI(request):
 #Here, we will be checking the syntax and format of the file and check for any missing values
 def checking(request):
 	directory = os.getcwd()
+	d = directory + "/downloadable"
 	strcnt = 0
 	message = ""
 	dt = {}
-	conf = get_config(directory)
+	conf = get_config(d)
 	message = checks(conf)
 	
 	if(message != "check"):
-		# print('HERE')
 		delete(directory, conf)
 		return render(request, 'notchecked.html', {'message': message})
 	dire = './' + get_data("project_name", conf)
+	
 	df = readcsv(dire, 'none')
 	categs = get_columns(conf)
 	num = missingcount(conf)
@@ -102,7 +108,8 @@ def checking(request):
 #Here, we will be handling the missing values
 def clean(request):
 	curr = os.getcwd()
-	conf = get_config(curr)
+	d = curr + "/downloadable"
+	conf = get_config(d)
 	dic = []
 	nums = {}
 	categs = {}
@@ -115,6 +122,7 @@ def clean(request):
 			# Here will be the for loop that will regroup our handling for each missing value
 			dic = get_data("missing values datatype",conf)
 			# print(dic)
+			# print(len(dic))
 			for key in dic:
 				if(dic[key] == 'float64' or dic[key] == 'int64'):
 					x = int(request.POST.get(key))
@@ -138,13 +146,14 @@ def clean(request):
 			directory = './' + get_data("project_name", conf)
 			num = get_data("lines counter", conf)
 			save_to_config_func(nametar, 'prediction', conf)
+			save_to_config_func(len(dic), 'handlecolcnt', conf)
 			df = handlemiss(nums, categs, directory)
 			x = len(df[nametar].unique())
-			newnum = num - len(df)
+			newnum = len(dic)
 			save_to_config_func(len(df), "lines counter after cleaning", conf)
 			#here I'll need to generate the model for my df and save it there
 			# X, y = split(df, nametar)
-
+			# print(curr)
 			#Here we will be transforming our categorical values
 			obj_df = df.select_dtypes(include=['object']).copy()
 			for col in obj_df:
@@ -162,7 +171,7 @@ def clean(request):
 			# print(correl)
 			newf = generateform(correl, nametar)
 			genere(newf)
-			df.to_csv('cleaned.csv', index = False)
+			df.to_csv(curr + '/downloadable/cleaned.csv', index = False)
 			# generate(get_model_repr(df))
 			form = DropFeat()
 			return render(request, 'clean.html', {'form': form,'conf': conf, 'num': newnum, 'corr': correl, 'target': nametar})
@@ -178,14 +187,13 @@ In this section, we will be continuing the cleaning (dropping features selected 
 def cleancontinued(request):
 	cat = []
 	curr = os.getcwd()
-	conf = get_config(curr)
+	d = curr + "/downloadable/"
+	conf = get_config(d)
 	message = ""
 	items = []
 	categs = []
 	cnt = 0
-	curr = os.getcwd()
-	pth = curr + "/UserInterface"
-	df = readcsv(pth, 'none')
+	df = readcsv(d, 'none')
 
 	#I generated a form that has checkboxes depending on the correlation table
 	if request.method == 'POST' or None:
@@ -197,9 +205,9 @@ def cleancontinued(request):
 				cnt += 1
 		# print
 		if cnt == 0:
-			df.to_csv('fullycleaned.csv', index = False)
-			if os.path.exists("cleaned.csv"):
-				os.remove("cleaned.csv") 
+			df.to_csv(curr + '/downloadable/fullycleaned.csv', index = False)
+			if os.path.exists(curr + "/downloadable/cleaned.csv"):
+				os.remove(curr + "/downloadable/cleaned.csv") 
 			message = "No columns will be dropped"
 			
 			form = TransformForm()
@@ -209,7 +217,7 @@ def cleancontinued(request):
 			save_to_config_func(items, 'colstodrop', conf)
 			newdf = dropcols(items, df)
 			#Haven't decided yet whether we should delete cleaned.csv and keep fullycleaned or keep them both
-			newdf.to_csv('fullycleaned.csv', index = False)
+			newdf.to_csv(curr + '/downloadable/fullycleaned.csv', index = False)
 
 			message = "The following were dropped: \n"
 			form = TransformForm()
@@ -230,10 +238,10 @@ def correlation(request):
 	x = 0
 	month, year, day = "", "", ""
 	curr = os.getcwd()
-	conf = get_config(curr)
+	d = curr + "/downloadable"
+	conf = get_config(d)
 	message = ""
-	pth = curr + "/UserInterface" 
-	df = readcsv(pth, 'fullycleaned.csv')
+	df = readcsv(d, 'fullycleaned.csv')
 	# print(df)
 
 	#I generated a form that has checkboxes depending on the correlation table
@@ -242,7 +250,7 @@ def correlation(request):
 		form = TransformForm(request.POST)
 		transform = request.POST.get('technique')
 
-		print(transform)
+		# print(transform)
 		
 		# #Here we will be transforming our categorical values
 		# obj_df = df.select_dtypes(include=['object']).copy()
@@ -263,8 +271,14 @@ def correlation(request):
 			tar = get_data('prediction',conf)
 			final = pca(df, tar)
 			# print(final)
-			final.to_csv('transformed.csv', index = False)
+			final.to_csv(curr + '/downloadable/transformed.csv', index = False)
 			cnt = colcnt(final)
+		elif(transform == '2'):
+			final = LDA(df, tar)
+			final.to_csv(curr + '/downloadable/transformed.csv', index = False)
+		else:
+			final = FA(df, tar)
+			final.to_csv(curr + '/downloadable/transformed.csv', index = False)
 			# print("hjere")
 		#2 is LDA and 3 is FA
 		
@@ -278,9 +292,9 @@ def modelling(request):
 	message = ""
 	chosen = ""
 	cc = 0
-	pth = directory + "/UserInterface" 
+	pth = directory + "/downloadable/" 
 	df = readcsv(pth, 'transformed.csv')
-	conf = get_config(directory)
+	conf = get_config(pth)
 
 	mod = get_data("preferred", conf)
 	tar = get_data("prediction", conf)
@@ -345,3 +359,5 @@ class DropFeat(forms.Form):
 	sqft_living15 = forms.BooleanField(required = False, label="sqft_living15 - 0.5854",initial = False)
 	sqft_lot15 = forms.BooleanField(required = False, label="sqft_lot15 - 0.0824",initial = False)
 
+
+#TODO check the number of targets to know whether its a binary classification or predictions

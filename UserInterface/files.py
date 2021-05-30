@@ -26,7 +26,8 @@ def renaming(directory, ext):
 
 #this function will save all of the form data to our config file 
 def save_to_config_form(request, form, conf):
-	f = open(conf, 'r+')
+	curr = os.getcwd() + "/downloadable/"
+	f = open(curr + conf, 'r+')
 	js = json.load(f)
 
 	for key, value in form.cleaned_data.items():
@@ -38,21 +39,26 @@ def save_to_config_form(request, form, conf):
 
 	data = json.dumps(js, indent = 4)
 
-	with open(conf, 'w') as outfile:
+	with open(curr + conf, 'w') as outfile:
 		outfile.write(data)
 
 #this function will save to our config file everything calculated (file cnt, lines cnt, etc..)
 def save_to_config_func(data, categ, conf):
-	f = open(conf)
+	curr = os.getcwd() + "/downloadable/"
+	# print(curr)
+	f = open(curr + conf)
 	dt = json.load(f)
 	dt[categ] = data
 
-	with open(conf, 'w') as fp:
+	with open(curr + conf, 'w') as fp:
 		json.dump(dt, fp)
+	# print(categ)
 
 #this function will get us the actual saved value within a specific item of the config
 def get_data(categ, conf):
-	f = open(conf)
+	curr = os.getcwd() + "/downloadable/"
+	# print(curr)
+	f = open(curr + conf)
 	dt = json.load(f)
 
 	return dt[categ]
@@ -70,9 +76,11 @@ def rename_conf(directory, conf, name):
 def init_conf(conf):
 	# print(os.getcwd())
 	f = open('template.json',)
+	curr = os.getcwd() + "/downloadable/"
+	# print(curr)
 	js = json.load(f)
 
-	with open(conf, 'w') as fp:
+	with open(curr + conf, 'w') as fp:
 		json.dump(js, fp)
 
 #this function will return our config file name
@@ -97,6 +105,12 @@ def delete(directory, conf):
 #gets the csv path by taking its name from our config file
 def get_csvpath(directory, conf):
 	name = get_data("project_name", conf)
+
+#cleans our downloadable folder once it reaches the end of the plateform
+def cleanfiles(directory):
+	p = Path(directory)
+	for file in os.listdir(directory):
+		os.remove(file)
 
 # def getdtdic(value):
 # 	l = len(value)

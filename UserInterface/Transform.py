@@ -52,7 +52,7 @@ def LDA(df, tar):
 	lst = [""]
 	X, y = split(df,tar)
 	ld = LinearDiscriminantAnalysis()
-
+	
 
 #This function will be performing Factor Analysis on our df
 def FA(df, tar):

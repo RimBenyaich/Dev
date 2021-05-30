@@ -16,7 +16,8 @@ def readcsv(directory, f):
 				return df
 		return None
 	else:
-		df = pd.read_csv('./' + f)
+		d = directory + '/' + f
+		df = pd.read_csv(d)
 		return df
 
 #this function will save the categories of our dataset in our config file as well

@@ -17,6 +17,16 @@ class TransformForm(forms.Form):
 
 	technique = forms.ChoiceField(label = 'Please indicate the Dimension Reduction technique desired', widget=forms.RadioSelect, choices=CHOICES)
 
+class CheckForm(forms.Form):
+	CHOICES1 = [(1,'Drop'),(2,'Mean'),(3,'Max'),(4,'Min')]
+	bathrooms = forms.ChoiceField(label = 'bathrooms has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	view = forms.ChoiceField(label = 'view has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	sqft_above = forms.ChoiceField(label = 'sqft_above has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	yr_renovated = forms.ChoiceField(label = 'yr_renovated has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	zipcode = forms.ChoiceField(label = 'zipcode has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	nametar = forms.CharField(label = 'Please indicate the name of the prediction')
+
+
 class DropFeat(forms.Form):
 	ids = forms.BooleanField(required = False, label="ids - -0.0169",initial = False)
 	date = forms.BooleanField(required = False, label="date - 0.0030",initial = False)
@@ -38,3 +48,5 @@ class DropFeat(forms.Form):
 	longi = forms.BooleanField(required = False, label="longi - 0.0216",initial = False)
 	sqft_living15 = forms.BooleanField(required = False, label="sqft_living15 - 0.5854",initial = False)
 	sqft_lot15 = forms.BooleanField(required = False, label="sqft_lot15 - 0.0824",initial = False)
+
+

@@ -3,6 +3,7 @@ This will be our linear regression model, and here we will be splitting our data
 training the model and returning the accuracy and loss while writing everything to
 our config file
 '''
+# import pickle5 as pickle
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
@@ -16,10 +17,12 @@ f = 'fullycleaned.csv'
 #in our example, Gradient Boosting Regressor gives a 82% accuracy
 def train_GBR(X, y):
 	X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 150)
-
 	reg = GradientBoostingRegressor()
 
 	reg.fit(X_train, y_train)
+  #code to save our model for it to be downloaded
+  # f = 'GBR_model.sav'
+  # pickle.dump(reg, open(f, 'wb'))
   
   # reg.save()
 	print('The accuracy provided by the Gradien Boosting Algorithm is: ' + str(reg.score(X_test, y_test)))
@@ -33,6 +36,10 @@ def train_LR(X, y):
 	reg = LinearRegression()
 
 	reg.fit(X_train, y_train)
+
+  #code to save our model for it to be downloaded
+  # f = 'LR_model.sav'
+  # pickle.dump(reg, open(f, 'wb'))
 
 	print('The accuracy provided by the Linear Regression Algorithm is: ' + str(reg.score(X_test, y_test)))
 
