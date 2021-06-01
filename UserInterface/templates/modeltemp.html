@@ -1,0 +1,17 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block content %} 
+
+
+{{message}} <br><br>
+The chosen model is: {{mod}} and records an accuracy of {{acc | floatformat:4}}%
+<br><br>
+You can now download in the following links all your files:
+{% comment %} <a href="{% url {{conf}} %}" download>Config File</a> {% endcomment %}
+<a href="{{conf}}" download>Config File</a>
+<a href="{{cleaned}}" download>Fully Cleaned CSV</a>
+<a href="{{trans}}" download>Transformed CSV</a>
+
+
+
+{% endblock %}

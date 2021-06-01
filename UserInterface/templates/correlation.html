@@ -2,12 +2,22 @@
 {% load static %} 
 {% block content %} 
 
-<img src={% static 'images/foo.png' %} class="center" alt = "Principal Component Analysis">
+
+{% if trans == 1 %}
+<img src={% static 'images/foo.png' %} class="center" alt = "Principal Component Analysis" title="Principal Component Analysis" >
 <br>
+{% elif trans == 3 %}
+<img src={% static 'images/foo.png' %} class="center" alt = "Linear Discriminant Analysis" title="Linear Discriminant Analysis" >
+<br>
+{% else %}
+<img src={% static 'images/foo.png' %} class="center" alt = "Factor Analysis" title="Factor Analysis" >
+<br>
+{% endif %}
+{% comment %} 
 <p> We will now be performing PCA that stands for Principal Component Analysis. PCA is <br>
  a Dimension Reduction Technique that will help us reduce our number of features <br>
 by merging some of them into one component based on their co-variance. <br>
 For more information, click <a href = "https://towardsdatascience.com/a-one-stop-shop-for-principal-component-analysis-5582fb7e0a9c" target="_blank"> here </a>
-</p>
+</p> {% endcomment %}
 <button type='submit' value="Submit" class = 'btn' onclick="location.href = '{% url 'modelling' %}'">Next</button>
 {% endblock %}

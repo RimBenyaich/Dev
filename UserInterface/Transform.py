@@ -52,7 +52,8 @@ def LDA(df, tar):
 	lst = [""]
 	X, y = split(df,tar)
 	ld = LinearDiscriminantAnalysis()
-	
+	transformed = ld.fit_transform(X, y)
+	plt.figure()	
 
 #This function will be performing Factor Analysis on our df
 def FA(df, tar):

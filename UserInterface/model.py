@@ -6,16 +6,21 @@ our config file
 # import pickle5 as pickle
 import pandas as pd
 import numpy as np
+from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import LinearRegression
+from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import train_test_split
+# from sklearn.externals import joblib
 
 f = 'fullycleaned.csv'
 
 #Both the next functions are in case of a Linear Regression to compare the accuracy
 
-#in our example, Gradient Boosting Regressor gives a 82% accuracy
+#in our example, Gradient Boosting Regressor gives a 78% accuracy
 def train_GBR(X, y):
+  # f = "joblib_model.pkl"
 	X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 150)
 	reg = GradientBoostingRegressor()
 
@@ -26,10 +31,11 @@ def train_GBR(X, y):
   
   # reg.save()
 	print('The accuracy provided by the Gradien Boosting Algorithm is: ' + str(reg.score(X_test, y_test)))
-  
+  # joblib.dump(reg, f)
+
 	return reg.score(X_test, y_test)
 
-#in our example, Linear regression gives a 54% accuracy
+#in our example, Linear regression gives a 65% accuracy
 def train_LR(X, y):
 	X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 150)
 
@@ -44,6 +50,19 @@ def train_LR(X, y):
 	print('The accuracy provided by the Linear Regression Algorithm is: ' + str(reg.score(X_test, y_test)))
 
 	return reg.score(X_test, y_test)
+
+def train_LogR(X, y):
+  X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 150)
+  model = LogisticRegression(solver='liblinear', random_state=0)
+  model.fit(X, y)
+
+  #Model evaluation
+  p_pred = model.predict_proba(X)
+  y_pred = model.predict(X)
+  score_ = model.score(X, y)
+  conf_m = confusion_matrix(y, y_pred)
+  report = classification_report(y, y_pred)
+
 
 #this is our sigmoid function that will serve as an activation function for our NN
 def Sigmoid(z):

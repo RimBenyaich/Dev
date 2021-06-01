@@ -9,6 +9,8 @@ class HomeForm(forms.Form):
 	url = forms.URLField(label='Google Drive URL')
 	CHOICES = [(1,'One CSV file'),(2,'Multiple CSV files'),(3,'One Json file'),(4,'Multiple Json files'),(5,'Images with their CSV file'),(6,'Images with their Json file'),(7,'Images with their txt file'),(8,'Images with their XML file')]
 	choice = forms.ChoiceField(label = 'Files Format', widget=forms.RadioSelect, choices=CHOICES)
+	CHOICES = [(1,"Regression"),(2,"Classification")]
+	probtype = forms.ChoiceField(label= 'Type of Problem', choices=CHOICES)
 	CHOICES = [(1,"CNN"),(2,"ANN"),(3,"Linear Regression"),(4,"Logistic Regression"),(5,"Any")]
 	preferred = forms.ChoiceField(label= 'Model preferred', choices=CHOICES)
 

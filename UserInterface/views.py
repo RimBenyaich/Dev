@@ -35,6 +35,7 @@ from .datafr import colcnt
 from .datafr import getdt
 from .genform import gencleanform
 from .files import cleanfiles
+from .datafr import determine
 import numpy as np
 import pandas as pd
 import os
@@ -44,6 +45,7 @@ import os
 conf = ''
 img_dir = '/images'
 path = ''
+probtype = ''
 
 # Here will be our home page
 def UI(request):
@@ -56,6 +58,7 @@ def UI(request):
 		if form.is_valid():
 			project_name = request.POST.get('project_name')
 			url = request.POST.get('url')
+			probtype = request.POST.get('probtype')
 			new_r = url.split('/')[-1]
 			cnt = 0
 			path = curr + project_name + '/'
@@ -74,6 +77,7 @@ def UI(request):
 #Here, we will be checking the syntax and format of the file and check for any missing values
 def checking(request):
 	directory = os.getcwd()
+	datat = {}
 	d = directory + "/downloadable"
 	strcnt = 0
 	message = ""
@@ -82,19 +86,22 @@ def checking(request):
 	message = checks(conf)
 	
 	if(message != "check"):
-		delete(directory, conf)
+		delete(directory, d + "/" + conf)
+		
 		return render(request, 'notchecked.html', {'message': message})
-	dire = './' + get_data("project_name", conf)
+	dire = './' + get_data("project name", conf)
 	
 	df = readcsv(dire, 'none')
 	categs = get_columns(conf)
 	num = missingcount(conf)
 	dic = check_missing(conf)
 	for key, value in dic.items():
+		datat[key] = str(df.dtypes[key])
 		if value > 0:
 			dt[key] = str(df.dtypes[key])
 	
 	save_to_config_func(dt, 'missing values datatype', conf)
+	save_to_config_func(datat, 'datatype', conf)
 	out = gencleanform(dic, dt)
 	genere(out)
 	cnt = len(categs)
@@ -141,12 +148,12 @@ def clean(request):
 					elif x == 2:
 						nums[key] = "Mode"
 			nametar = request.POST.get('nametar')
-			save_to_config_func(nums, 'handlemissingnums', conf)
-			save_to_config_func(categs, 'handlemissingcategs', conf)
-			directory = './' + get_data("project_name", conf)
+			save_to_config_func(nums, 'handle missing numbers', conf)
+			save_to_config_func(categs, 'handle missing categories', conf)
+			directory = './' + get_data("project name", conf)
 			num = get_data("lines counter", conf)
 			save_to_config_func(nametar, 'prediction', conf)
-			save_to_config_func(len(dic), 'handlecolcnt', conf)
+			save_to_config_func(len(dic), 'values handled count', conf)
 			df = handlemiss(nums, categs, directory)
 			x = len(df[nametar].unique())
 			newnum = len(dic)
@@ -203,7 +210,6 @@ def cleancontinued(request):
 			if request.POST.get(col) == 'on':
 				items.append(col)
 				cnt += 1
-		# print
 		if cnt == 0:
 			df.to_csv(curr + '/downloadable/fullycleaned.csv', index = False)
 			if os.path.exists(curr + "/downloadable/cleaned.csv"):
@@ -214,7 +220,7 @@ def cleancontinued(request):
 			return render(request, 'cleancontinued.html', {'form': form, 'message': message, 'cnt': cnt})
 		else:
 			#We make changes on df aka drop the selected columns and return the new df
-			save_to_config_func(items, 'colstodrop', conf)
+			save_to_config_func(items, 'columns to drop', conf)
 			newdf = dropcols(items, df)
 			#Haven't decided yet whether we should delete cleaned.csv and keep fullycleaned or keep them both
 			newdf.to_csv(curr + '/downloadable/fullycleaned.csv', index = False)
@@ -236,53 +242,41 @@ def correlation(request):
 	cnt = 0
 	plt = ""
 	x = 0
-	month, year, day = "", "", ""
 	curr = os.getcwd()
 	d = curr + "/downloadable"
 	conf = get_config(d)
 	message = ""
 	df = readcsv(d, 'fullycleaned.csv')
-	# print(df)
+	prevlines = get_data("lines counter", conf)
+	save_to_config_func(prevlines - len(df), "lines counter after cleaning", conf)
 
 	#I generated a form that has checkboxes depending on the correlation table
-	# print(df)
 	if request.method == 'POST' :
 		form = TransformForm(request.POST)
 		transform = request.POST.get('technique')
+		tar = get_data('prediction',conf)
 
-		# print(transform)
+		X, y = split(df, tar)
 		
-		# #Here we will be transforming our categorical values
-		# obj_df = df.select_dtypes(include=['object']).copy()
-		# for col in obj_df:
-		# 	df[col] = df[col].astype('category')
-		# 	pd.get_dummies(df, columns=[col])
+		#Here we will be checking the type of our Regression (Binary or multi-class classification or regression)
+		save_to_config_func(determine(y), "problem type", conf)
 
-		# #TODO separate the normal categories from datetime formats
-		# for col in df:
-		# 	if col == "date":
-		# 		x = df[col].str.len()
-		# 		# print(x[2])
-		# 		if x[1] == 15:
-		# 			df[col] = df[col].str.slice(0, 8)
-		# 			df[col] = df[col].astype(int)
-		
 		if(transform == '1'): #PCA
-			tar = get_data('prediction',conf)
+			save_to_config_func('Principle Component Analysis', 'transformation technique', conf)
 			final = pca(df, tar)
 			# print(final)
 			final.to_csv(curr + '/downloadable/transformed.csv', index = False)
 			cnt = colcnt(final)
 		elif(transform == '2'):
+			save_to_config_func('Linear Discrimination Analysis', 'transformation technique', conf)
 			final = LDA(df, tar)
 			final.to_csv(curr + '/downloadable/transformed.csv', index = False)
 		else:
+			save_to_config_func('Factor Analysis', 'transformation technique', conf)
 			final = FA(df, tar)
 			final.to_csv(curr + '/downloadable/transformed.csv', index = False)
-			# print("hjere")
-		#2 is LDA and 3 is FA
 		
-	return render(request, 'correlation.html', {'cnt': cnt})
+	return render(request, 'correlation.html', {'cnt': cnt, 'trans': transform})
 
 # We'll be returning to the user the model, the accuracy, the config file and the cleaned
 # and transformed csvs to download
@@ -296,36 +290,60 @@ def modelling(request):
 	df = readcsv(pth, 'transformed.csv')
 	conf = get_config(pth)
 
-	mod = get_data("preferred", conf)
+	mod = get_data("preferred model", conf)
+	probtype = get_data("problem type", conf)
 	tar = get_data("prediction", conf)
-	c = get_data("choice", conf)
-
-	if(mod == 1 or mod == 2):
-		if(c == 1 or c == 2 or c == 3 or c == 4):
+	c = get_data("format", conf)
+	if(mod == "CNN" or mod == "ANN"):
+		if(c == "One CSV" or c == "Multiple CSVs" or c == "One Json" or c == "Multiple Jsons"):
 			message = "There is no image folder for the Neural Network so another model will be selected"
-			mod = 3
-	elif(mod == 3 or mod == 4):
-		if(c== 5 or c == 6 or c == 7 or c == 8):
+			
+			if(probtype == "Classification"):
+				mod = "Logistic Regression"
+			else:
+				mod = "Linear Regression"
+			
+	elif(mod == "Linear Regression" or mod == "Logistic Regression"):
+		if(c == "Images with their CSV" or c == "Images with their Json" or c == "Images with their txt" or c == "Images with their XML"):
 				message = "There is an image folder that shouldn't be there so another model will be selected"
-				mod = 1
-	else:
-		if(c == 1 or c == 2 or c == 3 or c == 4):
-			message = "We will be proceeding to training your regression/classification model"
-			mod = 3
+				mod = "CNN"
 		else:
-			mod = 1
-	if mod == 3:
+			if(probtype == "Classification"):
+				mod = "Logistic Regression"
+			else:
+				mod = "Linear Regression"
+
+	else:
+		if(c == "One CSV" or c == "Multiple CSVs" or c == "One Json" or c == "Multiple Jsons"):
+			message = "We will be proceeding to training your regression/classification model"
+			if(probtype == "Classification"):
+				mod = "Logistic Regression"
+			else:
+				mod = "Linear Regression"
+		else:
+			message = "We will be proceeding to training your CNN model"
+			mod = "CNN"
+	if mod == "Linear Regression":
 		X, y = split(df, tar)
 		acc1 = train_LR(X, y)
 		acc2 = train_GBR(X, y)
 		if acc1 >= acc2:
-			chosen = "Logistic regression"
+			save_to_config_func("Linear Regression", "chosen model", conf)
+			chosen = "Linear Regression"
 			cc = acc1
+			save_to_config_func(acc1, "accuracy", conf)
 		else:
+			save_to_config_func("Gradient Boosting Regression", "chosen model", conf)
 			chosen = "Gradient Boosting Regression"
 			cc = acc2
-
-	return render(request, 'model.html', {'message': message, 'mod': mod, 'chosen': chosen, 'acc': cc})
+			save_to_config_func(acc2, "accuracy", conf)
+		conf = pth + conf
+		cleaned = pth + "fullycleaned.csv"
+		trans = pth + "transformed.csv"
+	else:
+		#Here will be out Logistic Regression
+		print("LOGISTIC")
+	return render(request, 'modeltemp.html', {'message': message, 'mod': mod, 'acc': cc, 'conf': conf, 'cleaned': cleaned, 'trans': trans})
 
 class CheckForm(forms.Form):
 	CHOICES1 = [(1,'Drop'),(2,'Mean'),(3,'Max'),(4,'Min')]
@@ -335,7 +353,6 @@ class CheckForm(forms.Form):
 	yr_renovated = forms.ChoiceField(label = 'yr_renovated has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
 	zipcode = forms.ChoiceField(label = 'zipcode has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
 	nametar = forms.CharField(label = 'Please indicate the name of the prediction')
-
 
 class DropFeat(forms.Form):
 	ids = forms.BooleanField(required = False, label="ids - -0.0169",initial = False)
@@ -358,6 +375,3 @@ class DropFeat(forms.Form):
 	longi = forms.BooleanField(required = False, label="longi - 0.0216",initial = False)
 	sqft_living15 = forms.BooleanField(required = False, label="sqft_living15 - 0.5854",initial = False)
 	sqft_lot15 = forms.BooleanField(required = False, label="sqft_lot15 - 0.0824",initial = False)
-
-
-#TODO check the number of targets to know whether its a binary classification or predictions

@@ -31,9 +31,45 @@ def save_to_config_form(request, form, conf):
 	js = json.load(f)
 
 	for key, value in form.cleaned_data.items():
-		if value:
-			if(value.isnumeric()):
-				js[key] = int(value)
+		if(value.isnumeric()):
+			value = int(value)
+			if(key == "choice"):
+				if(value == 1):
+					js["format"] = "One CSV"
+				elif(value == 2):
+					js["format"] = "Multiple CSVs"
+				elif(value == 3):
+					js["format"] = "One Json"
+				elif(value == 4):
+					js["format"] = "Multiple Jsons"
+				elif(value == 5):
+					js["format"] = "Images with their CSV"
+				elif(value == 6):
+					js["format"] = "Images with their Json"
+				elif(value == 7):
+					js["format"] = "Images with their txt"
+				else:
+					js["format"] = "Images with their XML"
+			elif(key == "preferred"):
+				if(value == 1):
+					js["preferred model"] = "CNN"
+				elif(value == 2):
+					js["preferred model"] = "ANN"
+				elif(value == 3):
+					js["preferred model"] = "Linear Regression"
+				elif(value == 4):
+					js["preferred model"] = "Logistic Regression"
+				else:
+					js["preferred model"] = "Any"
+			elif(key == "probtype"):
+				if(value == 1):
+					js["problem type"] = "Regression"
+				else:
+					js["problem type"] = "Classification"
+
+		else:
+			if(key == "project_name"):
+				js["project name"] = value
 			else:
 				js[key] = value
 
@@ -93,7 +129,7 @@ def get_config(directory):
 #this function will delete the config file after the user downloads it and exits the website
 def delete(directory, conf):
 	p = Path(directory)
-	name = get_data("project_name", conf)
+	name = get_data("project name", conf)
 	for file in os.listdir(directory):
 		if(file == name):
 			q = p / file
@@ -104,7 +140,7 @@ def delete(directory, conf):
 
 #gets the csv path by taking its name from our config file
 def get_csvpath(directory, conf):
-	name = get_data("project_name", conf)
+	name = get_data("project name", conf)
 
 #cleans our downloadable folder once it reaches the end of the plateform
 def cleanfiles(directory):

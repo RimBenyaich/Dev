@@ -22,7 +22,7 @@ def readcsv(directory, f):
 
 #this function will save the categories of our dataset in our config file as well
 def get_columns(conf):
-    directory = './' + get_data("project_name", conf)
+    directory = './' + get_data("project name", conf)
     df = readcsv(directory, 'none')
     lst = []
     for col in df:
@@ -73,13 +73,14 @@ def colcnt(df):
 	
 	return cnt
 
-# def getmissnum(dic):
-# 	d = []
+def determine(y):
+	i = 1
+	j = []
+	s = set()
+	for i in list(range(1, len(y), 1)):
+		s.add(i)
 
-# 	for key in dic:
-
-
-# def getdt(df):
-# 	dt = df.dtypes
-
-# 	return dt
+	if(len(s) / len(y)) > 0.9:
+		return "Regression"
+	else:
+		return "Classification"
