@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'UserInterface',
-    'rest_framework_mongoengine'
+    'rest_framework_mongoengine',
+
 ]
 
 MIDDLEWARE = [
@@ -69,11 +70,11 @@ TEMPLATES = [
         },
         #  'libraries':{
         #                 'customfilter':  'UserInterface.templatetags.customfilter',
- 
-        # },       
+
+        # },
     },
 
-    
+
 ]
 
 WSGI_APPLICATION = 'ui.wsgi.application'
@@ -83,13 +84,13 @@ WSGI_APPLICATION = 'ui.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-           'ENGINE': 'djongo',
-           'NAME': 'MLOps',
-           'CLIENT':{
-            'host':'mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false'
-           }
-       }
+    # 'default': {
+    #        'ENGINE': 'djongo',
+    #        'NAME': 'MLOps',
+    #        'CLIENT':{
+    #         'host':'mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false'
+    #        }
+    #    }
 }
 
 
@@ -129,8 +130,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/static/'
-STATIC_ROOT = os.path.join('/home/acer/Dev/src', 'static')
-MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'static','images')
-MEDIA_URL = '/static/images/'
+# STATIC_URL = '/static/static/'
+# STATIC_ROOT = os.path.join('/home/acer/Dev/src', 'static')
+# MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'static', 'images')
+# MEDIA_URL = '/static/images/'
 
+
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_URL = '/static/'

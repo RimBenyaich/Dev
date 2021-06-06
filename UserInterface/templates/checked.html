@@ -1,35 +1,35 @@
 {% extends 'base.html' %} 
 {% load static %} 
+
 {% block content %} 
-Everything is in order! Your columns go as follows: </p>
-{%for col in categs%}
-<li>{{col}} 
-</li>
-{%endfor%}
+	Everything is in order! Your columns go as follows:
+	<ul>
+		{% for col in categs %}
+			<li>{{col}}</li>
+		{% endfor %}
+	</ul>
 
-{% if num == 0 %}
-<p> After checking your dataset, there is no missing values. 
-<button type='submit' value="Submit" class = 'btn' onclick="location.href = '{% url 'correlation' %}'">Next</button>
-
-{% else %}
-
-<br>There are {{num}} missing values.
-
-{% comment %} {% load customfilter %} {% endcomment %}
- {% comment %} They go as follows:
-{% for key, value in dic.items%} 
-    {% if value > 0%}
-    <li>{{key}} - {{value}}</li> {% endcomment %} 
-    {% comment %} {% endif%}
-{% endfor %} {% endcomment %}
-<p>Please indicate how you want to handle each of the missing values:</p>
-<form action='{%url 'clean'%}' method='POST'>
-    {% csrf_token %}
-    {{ form.as_p }}
-
-    <button type='submit' name='btn' id='btn' class='btn'>Submit</button>
-    {% comment %} onclick="location.href = '{% url 'clean' %}" {% endcomment %}
-</form>
-
-{% endif %}
+	{% if num == 0 %}
+		<p> After checking your dataset, there is no missing values. 
+		<button type='button' class='btn' onclick="location.href = '{% url 'correlation' %}'">Next</button>
+	{% else %}
+		<br>
+		<p class="h4 mb-4">There are <b>{{num}}</b> missing values. Please indicate how you want to handle each of the missing values:</p>
+		<form action='{%url 'clean'%}' method='POST'>
+			{% csrf_token %}
+			{% for field in form.visible_fields %}
+				{% comment %} {% if forloop.counter0|divisibleby:2 %}
+					<div class="row">
+				{% endif %} {% endcomment %}
+					<div class="col form-group">
+						{{ field.label_tag }}
+						{{ field }}
+					</div>
+				{% comment %} {% if forloop.counter|divisibleby:2 %}
+					</div>
+				{% endif %} {% endcomment %}
+			{% endfor %}
+			<button type='submit' name='btn' id='btn' class='btn btn-primary'>Submit</button>
+		</form>
+	{% endif %}
 {% endblock %}

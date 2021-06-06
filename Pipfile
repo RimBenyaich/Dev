@@ -12,6 +12,7 @@ bs4 = "*"
 pandas = "*"
 sklearn = "*"
 matplotlib = "*"
+requests = "*"
 
 [dev-packages]
 

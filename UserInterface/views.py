@@ -1,42 +1,14 @@
 from django.shortcuts import render
 from django import forms
-from django.http import HttpResponse
 from .forms import HomeForm, TransformForm
 from .downloadfromgd import recurs_folders
-from .files import renaming
-from .files import rename_conf
-from .files import init_conf
-from .files import save_to_config_form
-from .files import save_to_config_func
-from .files import get_config
-from .files import get_data
-from .check import checks
-from .check import check_ext
-from .check import check_missing
-from .check import missingcount
-from .datafr import dropcols, get_columns
-from .datafr import readcsv
+from .files import renaming, rename_conf, init_conf, save_to_config_form, save_to_config_func, get_config, get_data, delete
+from .check import checks, check_missing, missingcount
 from .clean import handlemiss
-from .modelrep import get_model_repr
-from .Transform import split
-from .Transform import corr
-from .Transform import pca
-from .Transform import LDA
-from .Transform import FA
-from .files import delete
-from .gen_mod_py import generate
-from .model import train_GBR
-from .model import train_LR
-from .genform import generateform
-from .genform import genere
-from .datafr import getcols
-from .datafr import getdt
-from .datafr import colcnt
-from .datafr import getdt
-from .genform import gencleanform
-from .files import cleanfiles
-from .datafr import determine
-import numpy as np
+from .Transform import split, corr, pca, LDA, FA
+from .model import train_GBR, train_LR
+from .genform import generateform, genere, gencleanform
+from .datafr import getcols, colcnt, determine, dropcols, get_columns, readcsv
 import pandas as pd
 import os
 # from .models import DFModel
@@ -55,6 +27,7 @@ def UI(request):
 	direct = curr + "downloadable/"
 	if request.method == 'POST':
 		form = HomeForm(request.POST)
+		print(request.POST)
 		if form.is_valid():
 			project_name = request.POST.get('project_name')
 			url = request.POST.get('url')
@@ -375,3 +348,43 @@ class DropFeat(forms.Form):
 	longi = forms.BooleanField(required = False, label="longi - 0.0216",initial = False)
 	sqft_living15 = forms.BooleanField(required = False, label="sqft_living15 - 0.5854",initial = False)
 	sqft_lot15 = forms.BooleanField(required = False, label="sqft_lot15 - 0.0824",initial = False)
+
+class CheckForm(forms.Form):
+	CHOICES1 = [(1,'Drop'),(2,'Mean'),(3,'Max'),(4,'Min')]
+	bathrooms = forms.ChoiceField(label = 'bathrooms has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	view = forms.ChoiceField(label = 'view has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	sqft_above = forms.ChoiceField(label = 'sqft_above has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	yr_renovated = forms.ChoiceField(label = 'yr_renovated has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	zipcode = forms.ChoiceField(label = 'zipcode has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	nametar = forms.CharField(label = 'Please indicate the name of the prediction')
+
+class DropFeat(forms.Form):
+	ids = forms.BooleanField(required = False, label="ids - -0.0169",initial = False)
+	date = forms.BooleanField(required = False, label="date - 0.0030",initial = False)
+	bedrooms = forms.BooleanField(required = False, label="bedrooms - 0.3083",initial = False)
+	bathrooms = forms.BooleanField(required = False, label="bathrooms - 0.5252",initial = False)
+	sqft_living = forms.BooleanField(required = False, label="sqft_living - 0.7021",initial = False)
+	sqft_lot = forms.BooleanField(required = False, label="sqft_lot - 0.0897",initial = False)
+	floors = forms.BooleanField(required = False, label="floors - 0.2568",initial = False)
+	waterfront = forms.BooleanField(required = False, label="waterfront - 0.2664",initial = False)
+	view = forms.BooleanField(required = False, label="view - 0.3974",initial = False)
+	condition = forms.BooleanField(required = False, label="condition - 0.0364",initial = False)
+	grade = forms.BooleanField(required = False, label="grade - 0.6674",initial = False)
+	sqft_above = forms.BooleanField(required = False, label="sqft_above - 0.6056",initial = False)
+	sqft_basement = forms.BooleanField(required = False, label="sqft_basement - 0.3238",initial = False)
+	yr_built = forms.BooleanField(required = False, label="yr_built - 0.0539",initial = False)
+	yr_renovated = forms.BooleanField(required = False, label="yr_renovated - 0.1264",initial = False)
+	zipcode = forms.BooleanField(required = False, label="zipcode - -0.0533",initial = False)
+	lat = forms.BooleanField(required = False, label="lat - 0.3070",initial = False)
+	longi = forms.BooleanField(required = False, label="longi - 0.0216",initial = False)
+	sqft_living15 = forms.BooleanField(required = False, label="sqft_living15 - 0.5854",initial = False)
+	sqft_lot15 = forms.BooleanField(required = False, label="sqft_lot15 - 0.0824",initial = False)
+
+class CheckForm(forms.Form):
+	CHOICES1 = [(1,'Drop'),(2,'Mean'),(3,'Max'),(4,'Min')]
+	bathrooms = forms.ChoiceField(label = 'bathrooms has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	view = forms.ChoiceField(label = 'view has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	sqft_above = forms.ChoiceField(label = 'sqft_above has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	yr_renovated = forms.ChoiceField(label = 'yr_renovated has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	zipcode = forms.ChoiceField(label = 'zipcode has 1 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	nametar = forms.CharField(label = 'Please indicate the name of the prediction')

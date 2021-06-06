@@ -2,14 +2,8 @@
 {% load static %}
 
 {% block content %}
-		<h3>
-		FILE(S) DOWNLOADED SUCCESSFULLY!
-	 	</h3>
-
-	 	<p>Your configuration file is {{conf}}</p>
-
-	 	<p>Click on the Next button to start checking the formatting of the downloaded files</p>
-
-	 <button type='submit' value="Submit" class = 'btn' onclick="location.href = 'checking/'">Next</button>
-
+	<h3>FILE(S) DOWNLOADED SUCCESSFULLY!</h3>
+	<p>Your configuration file is <b>{{conf}}</b></p>
+	<p>Click on the Next button to start checking the formatting of the downloaded files</p>
+	<button type='button' class ='btn btn-primary' onclick="location.href = 'checking/'">Next</button>
 {% endblock %}

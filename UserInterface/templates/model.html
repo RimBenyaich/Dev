@@ -1,0 +1,8 @@
+{% extends 'base.html' %} 
+{% load static %} 
+
+{% block content %} 
+    {{message}} <br><br>
+    The chosen model is: <b>{{ chosen }}</b> and records an accuracy of <b>{{acc | floatformat:4}}%</b>
+    <br><br>
+{% endblock %}

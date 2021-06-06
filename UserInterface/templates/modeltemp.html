@@ -1,10 +1,12 @@
 {% extends 'base.html' %} 
 {% load static %} 
+
 {% block content %} 
 
 
 {{message}} <br><br>
-The chosen model is: {{mod}} and records an accuracy of {{acc | floatformat:4}}%
+The chosen model is: <b>{{ chosen }}</b> and records an accuracy of <b>{{acc | floatformat:4}}%</b>
+
 <br><br>
 You can now download in the following links all your files:
 {% comment %} <a href="{% url {{conf}} %}" download>Config File</a> {% endcomment %}
