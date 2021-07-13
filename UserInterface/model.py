@@ -6,11 +6,9 @@ our config file
 # import pickle5 as pickle
 import pandas as pd
 import numpy as np
-from sklearn.linear_model import LogisticRegression
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LogisticRegression, LinearRegression
 from sklearn.metrics import classification_report, confusion_matrix
-from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble import GradientBoostingRegressor, GradientBoostingClassifier
 from sklearn.model_selection import train_test_split
 # from sklearn.externals import joblib
 

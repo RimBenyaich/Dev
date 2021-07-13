@@ -1,20 +1,33 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% load static %} 
+{% load extra_tags %}
 
 {% block content %}
-    {% if cnt != 0 %}
-        <p>{{ message }}</p>
-        {% for i in items %}
-            {{ i }}<br>
-        {% endfor %}
-    {% endif %}
+	{% if cnt != 0 %}
+		<p>{{ message }}</p>
+		{% for i in items %}
+			{{ i }}<br>
+		{% endfor %}
+	{% endif %}
 
-    <form action='{%url 'correlation'%}' method='POST'>
-        {% csrf_token %}
-        {{ form.as_p }}
-        <p>PCA Aims to find components that account for maximum variance in the data (including error and within-variable variance). Unlike LDA, it does not  take into account class membership (i.e., unsupervised), and is used when such information is not available. Importantly, both LDA and PCA do not require any prior notion of how the variables are related among themselves, and the resulting components can not be interpreted in terms of an underlying construct</p>
-<p>LDA identifies components (i.e., linear combination of the observed variables) that maximize class separation (i.e. between-class variance) when such prior information is available (i.e., supervised). E.g., you have a training set containing a variable specifying the class of each observation. </p>
-<p>FA Tries to uncover latent factors that account for the variance shared between the observed variables (thus excluding error and within-variable variance). Ideally, the resulting latent factors represent interpretable underlying constructs. FA should be used when you assume that an underlying causal model induces covariance between several observed variables. Consequently, unlike PCA and LDA, the observed variables are linear combinations of the estimated latent factors.</p>
-        <button type='submit' name='btn' id='btn' class='btn btn-primary'>Submit</button>
-    </form>
+	<form action='{%url 'correlation'%}' method='POST'>
+		{% csrf_token %}
+		<div class="form-group mt-4">
+			<label for="technique">Please indicate the Dimension Reduction technique desired:</label>
+			{% for technique, definition in form.fields.technique.choices|zip:help_text %}
+				<div class="form-check form-check-radio">
+					<label class="form-check-label">
+						<input class="form-check-input" type="radio" name="technique" id="technique{{ forloop.counter }}" value="{{ forloop.counter }}" required>
+						{{ technique.1 }}
+						<span class="circle">
+							<span class="check"></span>
+						</span>
+					<a><i class="material-icons" data-toggle="tooltip" data-placement="right" title="{{ definition }}">help</i></a>
+					</label>
+				</div>
+			{% endfor %}
+		</div>
+		
+		<button type='submit' name='btn' id='btn' class='btn btn-primary'>Submit</button>
+	</form>
 {% endblock %}

@@ -5,82 +5,62 @@ import pandas as pd
 import os
 from .files import get_data
 from .files import save_to_config_func
-from sklearn.preprocessing import OneHotEncoder
 
-#this function will read our csv from the given directory
+# this function will read our csv from the given directory
+# TODO : use optional args
 def readcsv(directory, f):
-	if(f == 'none'):
-		for filename in os.listdir(directory):
-			if filename.endswith('.csv'):
-				df = pd.read_csv(directory + '/' + filename)
-				return df
-		return None
-	else:
-		d = directory + '/' + f
-		df = pd.read_csv(d)
-		return df
+    if f == 'none':
+        for filename in os.listdir(directory):
+            if filename.endswith('.csv'):
+                df = pd.read_csv(directory + '/' + filename)
+                return df
+        return None
+    else:
+        d = directory + '/' + f
+        df = pd.read_csv(d)
+        return df
 
-#this function will save the categories of our dataset in our config file as well
+
+# this function will save the categories of our dataset in our config file as well
 def get_columns(conf):
     directory = './' + get_data("project name", conf)
     df = readcsv(directory, 'none')
-    lst = []
-    for col in df:
-      lst.append(col)
-    
+    lst = [col for col in df]
     save_to_config_func(lst, "categories", conf)
 
     return lst
 
-#this function will get our columns from our df
+
+# this function will get our columns from our df
 def getcols(df):
-	lst = []
+    return list(df.columns)
 
-	for col in df:
-		lst.append(col)
-
-	return lst
 
 def get_mod(pref):
-	if pref == 1:
-		mod = "CNN"
-	elif pref == 2:
-		mod = "ANN"
-	elif pref == 3:
-		mod = "Linear Regression"
-	elif pref == 4:
-		mod = "Logistric Regression"
-	else:
-		mod = "Any"
+    models = {
+        1: "CNN",
+        2: "ANN",
+        3: "Linear Regression",
+        4: "Logistric Regression",
+    }
+    mod = models[pref]
+
 
 def dropcols(items, df):
-	for it in items:
-		df.drop(it, axis = 1, inplace = True)
-	
-	return df
+    for it in items:
+        df.drop(it, axis=1, inplace=True)
+
+    return df
+
 
 def getdt(df):
-	dt = []
-	for col in df.columns:
-		dt.append(type(df[col][1]))
-	
-	return dt
+    return [type(df[col][1]) for col in df.columns]
+
 
 def colcnt(df):
-	cnt = 0
-	for col in df.columns:
-		cnt = cnt + 1
-	
-	return cnt
+    return len(df.columns)
+
 
 def determine(y):
-	i = 1
-	j = []
-	s = set()
-	for i in list(range(1, len(y), 1)):
-		s.add(i)
-
-	if(len(s) / len(y)) > 0.9:
-		return "Regression"
-	else:
-		return "Classification"
+    s = set(range(1, len(y)))
+    return "Regression" if (len(s) / len(y)) > 0.9 else "Classification"

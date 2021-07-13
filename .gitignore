@@ -7,6 +7,7 @@
 *.pot
 *.pyc
 __pycache__/
+*.pyc
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
@@ -229,11 +230,7 @@ Thumbs.db
 
 
 ### VisualStudioCode ###
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+.vscode
 *.code-workspace
 
 ### VisualStudioCode Patch ###
@@ -243,3 +240,6 @@ Thumbs.db
 
 
 # End of https://www.toptal.com/developers/gitignore/api/django,python,visualstudiocode
+
+*.csv
+*.json
