@@ -23,17 +23,15 @@
 			{% endfor %}
 			<div class="form-group mt-4">
 				<label for="probtype">Target column</label>
-				{% for column in dfCols %}
 					<div class="form-check form-check-radio">
 						<label class="form-check-label">
-							<input class="form-check-input" type="radio" name="target" id="column{{ forloop.counter }}" value="{{ column }}" required>
-							{{ column }}
-							<span class="circle">
-								<span class="check"></span>
-							</span>
+							<select class="form-control selectpicker" data-style="btn btn-link" name="target" id="target">
+							{% for column in dfCols %}
+								<option id="column{{ forloop.counter }}" value="{{ column }}" {% if forloop.last %} selected {% endif %}>{{ column }}</option>
+							{% endfor %}
+							</select>
 						</label>
 					</div>
-				{% endfor %}
 			</div>
 			<button type='submit' name='btn' id='btn' class='btn btn-primary'>Submit</button>
 		</form>

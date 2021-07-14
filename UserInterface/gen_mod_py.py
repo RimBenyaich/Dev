@@ -7,8 +7,6 @@ import os
 #this function will create the models.py and fill it with the right model for our df
 def generate(func):
     os.chdir("./UserInterface")
-    f = open("models.py","a")
-    f.write("\n")
-    # f.write("from djongo import models\n\n")
-    f.write(func)
-    f.close()
+    with open("models.py","a") as f:
+        f.write("\n")
+        f.write(func)

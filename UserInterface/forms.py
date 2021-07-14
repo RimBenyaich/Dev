@@ -104,3 +104,76 @@ class DropFeat(forms.Form):
 	slp = forms.BooleanField(required = False, label="slp - 0.3459",initial = False)
 	caa = forms.BooleanField(required = False, label="caa - -0.3917",initial = False)
 	thall = forms.BooleanField(required = False, label="thall - -0.3440",initial = False)
+
+class CheckForm(forms.Form):
+	CHOICES1 = [(1,'Drop'),(2,'Mean'),(3,'Max'),(4,'Min')]
+	age = forms.ChoiceField(label = 'age has 2 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	sex = forms.ChoiceField(label = 'sex has 3 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	cp = forms.ChoiceField(label = 'cp has 4 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	trtbps = forms.ChoiceField(label = 'trtbps has 3 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+
+class DropFeat(forms.Form):
+	age = forms.BooleanField(required = False, label="age - -0.2226",initial = False)
+	sex = forms.BooleanField(required = False, label="sex - -0.2801",initial = False)
+	cp = forms.BooleanField(required = False, label="cp - 0.4304",initial = False)
+	trtbps = forms.BooleanField(required = False, label="trtbps - -0.1457",initial = False)
+	chol = forms.BooleanField(required = False, label="chol - -0.0898",initial = False)
+	fbs = forms.BooleanField(required = False, label="fbs - -0.0320",initial = False)
+	restecg = forms.BooleanField(required = False, label="restecg - 0.1395",initial = False)
+	thalachh = forms.BooleanField(required = False, label="thalachh - 0.4170",initial = False)
+	exng = forms.BooleanField(required = False, label="exng - -0.4398",initial = False)
+	oldpeak = forms.BooleanField(required = False, label="oldpeak - -0.4472",initial = False)
+	slp = forms.BooleanField(required = False, label="slp - 0.3632",initial = False)
+	caa = forms.BooleanField(required = False, label="caa - -0.3865",initial = False)
+	thall = forms.BooleanField(required = False, label="thall - -0.3377",initial = False)
+
+class CheckForm(forms.Form):
+	CHOICES1 = [(1,'Drop'),(2,'Mean'),(3,'Max'),(4,'Min')]
+	age = forms.ChoiceField(label = 'age has 2 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	sex = forms.ChoiceField(label = 'sex has 3 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	cp = forms.ChoiceField(label = 'cp has 4 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	trtbps = forms.ChoiceField(label = 'trtbps has 3 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+
+class CheckForm(forms.Form):
+	CHOICES1 = [(1,'Drop'),(2,'Mean'),(3,'Max'),(4,'Min')]
+	age = forms.ChoiceField(label = 'age has 2 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	sex = forms.ChoiceField(label = 'sex has 3 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	cp = forms.ChoiceField(label = 'cp has 4 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	trtbps = forms.ChoiceField(label = 'trtbps has 3 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+
+class DropFeat(forms.Form):
+	age = forms.BooleanField(required = False, label="age - -0.2235",initial = False)
+	sex = forms.BooleanField(required = False, label="sex - -0.2828",initial = False)
+	cp = forms.BooleanField(required = False, label="cp - 0.4346",initial = False)
+	trtbps = forms.BooleanField(required = False, label="trtbps - -0.1440",initial = False)
+	chol = forms.BooleanField(required = False, label="chol - -0.0893",initial = False)
+	fbs = forms.BooleanField(required = False, label="fbs - -0.0308",initial = False)
+	restecg = forms.BooleanField(required = False, label="restecg - 0.1371",initial = False)
+	thalachh = forms.BooleanField(required = False, label="thalachh - 0.4148",initial = False)
+	exng = forms.BooleanField(required = False, label="exng - -0.4386",initial = False)
+	oldpeak = forms.BooleanField(required = False, label="oldpeak - -0.4473",initial = False)
+	slp = forms.BooleanField(required = False, label="slp - 0.3613",initial = False)
+	caa = forms.BooleanField(required = False, label="caa - -0.3851",initial = False)
+	thall = forms.BooleanField(required = False, label="thall - -0.3367",initial = False)
+
+class CheckForm(forms.Form):
+	CHOICES1 = [(1,'Drop'),(2,'Mean'),(3,'Max'),(4,'Min')]
+	age = forms.ChoiceField(label = 'age has 2 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	sex = forms.ChoiceField(label = 'sex has 3 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	cp = forms.ChoiceField(label = 'cp has 4 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+	trtbps = forms.ChoiceField(label = 'trtbps has 3 missing values', widget=forms.RadioSelect, choices=CHOICES1)
+
+class DropFeat(forms.Form):
+	age = forms.BooleanField(required = False, label="age - -0.2248",initial = False)
+	sex = forms.BooleanField(required = False, label="sex - -0.2828",initial = False)
+	cp = forms.BooleanField(required = False, label="cp - 0.4223",initial = False)
+	trtbps = forms.BooleanField(required = False, label="trtbps - -0.1453",initial = False)
+	chol = forms.BooleanField(required = False, label="chol - -0.0849",initial = False)
+	fbs = forms.BooleanField(required = False, label="fbs - -0.0345",initial = False)
+	restecg = forms.BooleanField(required = False, label="restecg - 0.1384",initial = False)
+	thalachh = forms.BooleanField(required = False, label="thalachh - 0.4198",initial = False)
+	exng = forms.BooleanField(required = False, label="exng - -0.4344",initial = False)
+	oldpeak = forms.BooleanField(required = False, label="oldpeak - -0.4459",initial = False)
+	slp = forms.BooleanField(required = False, label="slp - 0.3671",initial = False)
+	caa = forms.BooleanField(required = False, label="caa - -0.3891",initial = False)
+	thall = forms.BooleanField(required = False, label="thall - -0.3396",initial = False)

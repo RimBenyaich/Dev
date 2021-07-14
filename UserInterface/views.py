@@ -276,7 +276,7 @@ def correlation(request):
 def modelling(request):
 	directory = os.getcwd()
 	message = ""
-	cc = 0
+	acc = 0
 	pth = directory + "/downloadable/"
 	df = readcsv(pth, 'transformed.csv')
 	conf = get_config(pth)
@@ -317,11 +317,13 @@ def modelling(request):
 		acc1 = train_LR(X, y)
 		acc2 = train_GBR(X, y)
 		if acc1 >= acc2:
-			cc = _extracted_from_modelling_48("Linear Regression", conf, acc1)
+			save_to_config_func("Linear Regression", "chosen model", conf)
+			acc = acc1
+			save_to_config_func(acc1, "accuracy", conf)
 		else:
-			cc = _extracted_from_modelling_48(
-				"Gradient Boosting Regression", conf, acc2)
-		save_to_config_func(cc, "accuracy", conf)
+			save_to_config_func("Gradient Boosting Regression", "chosen model", conf)
+			acc = acc2
+			save_to_config_func(acc2, "accuracy", conf)
 		conf = pth + conf
 		cleaned = pth + "fullycleaned.csv"
 		trans = pth + "transformed.csv"
@@ -329,10 +331,4 @@ def modelling(request):
 		# Here will be out Logistic Regression
 		print("LOGISTIC")
 	#TODO : clean the forms file
-	return render(request, 'modeltemp.html', {'message': message, 'mod': mod, 'acc': cc, 'conf': conf, 'cleaned': cleaned, 'trans': trans})
-
-
-def _extracted_from_modelling_48(arg0, conf, arg2):
-	save_to_config_func(arg0, "chosen model", conf)
-	result = arg2
-	return result
+	return render(request, 'modeltemp.html', {'message': message, 'mod': mod, 'acc': acc, 'conf': conf, 'cleaned': cleaned, 'trans': trans})
