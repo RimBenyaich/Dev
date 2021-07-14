@@ -3,28 +3,26 @@ This py file will have all the functions related to the pandas' dataframe
 '''
 import pandas as pd
 import os
-from .files import get_data
-from .files import save_to_config_func
+from .files import get_data, save_to_config_func
 
-# this function will read our csv from the given directory
-# TODO : use optional args
-def readcsv(directory, f):
-    if f == 'none':
+def readcsv(directory, f=None):
+    """read a csv from the given directory, if filename not given it will look for .csv files in the directory"""
+    if f:
+        d = directory + '/' + f
+        df = pd.read_csv(d)
+        return df
+    else:
         for filename in os.listdir(directory):
             if filename.endswith('.csv'):
                 df = pd.read_csv(directory + '/' + filename)
                 return df
         return None
-    else:
-        d = directory + '/' + f
-        df = pd.read_csv(d)
-        return df
 
 
 # this function will save the categories of our dataset in our config file as well
 def get_columns(conf):
     directory = './' + get_data("project name", conf)
-    df = readcsv(directory, 'none')
+    df = readcsv(directory)
     lst = [col for col in df]
     save_to_config_func(lst, "categories", conf)
 
@@ -36,25 +34,12 @@ def getcols(df):
     return list(df.columns)
 
 
-def get_mod(pref):
-    models = {
-        1: "CNN",
-        2: "ANN",
-        3: "Linear Regression",
-        4: "Logistric Regression",
-    }
-    mod = models[pref]
-
 
 def dropcols(items, df):
     for it in items:
         df.drop(it, axis=1, inplace=True)
 
     return df
-
-
-def getdt(df):
-    return [type(df[col][1]) for col in df.columns]
 
 
 def colcnt(df):

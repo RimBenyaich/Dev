@@ -1,24 +1,6 @@
 from djongo import models
 
-# Create your models here.
-class Configuration(models.Model):
-	config_name = models.CharField()
-	project_name = models.CharField()
-	url = models.URLField()
-	choice = models.DecimalField()
-	preferred = models.CharField()
-	# categories = ArrayField(models.CharField(max_length=20), blank=True)
-	files_counter = models.DecimalField()
-	lines_counter = models.DecimalField()
-	# missing_val_dt = ArrayField(models.CharField(max_length=20), blank=True)
-	prediction = models.CharField()
-	missing_cnt = models.DecimalField()
-	misshandle = models.DecimalField()
-	linesafterclean = models.DecimalField()
-	# cols = ArrayField(models.CharField(max_length=20), blank=True)
-
-	class Meta:
-		abstract = True
+# Create your models here
 
 class DFModel(models.Model):
     ids = models.BigIntegerField() # min: 1000102, max: 9900000190, mean: 4580533745.265966

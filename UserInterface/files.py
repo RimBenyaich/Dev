@@ -6,29 +6,24 @@ json file. It will also do all the saving and retrieving from the config file
 import os
 import datetime
 import json
-import pandas as pd
 from pathlib import Path
 import shutil
 
 # this function will rename our csv file
-
-
 def renaming(directory, ext):
-    path, dirs, files = next(os.walk(directory))
+    _, _, files = next(os.walk(directory))
     Current_Date = datetime.datetime.today().strftime('%d_%b_%Y_%H_%M_%S')
-    # print(len(files))
     for file in os.listdir(directory):
         if(file.endswith(ext)):
-            src = (directory + "/" + file)
+            src = directory + "/" + file
             name = file.split('.')[0]
-            dst = (directory + "/" + name + '_' + Current_Date + ext)
+            dst = directory + "/" + name + '_' + Current_Date + ext
             os.rename(src, dst)
 
     return len(files)
 
+
 # this function will save all of the form data to our config file
-
-
 def save_to_config_form(request, form, conf):
     curr = os.getcwd() + "/downloadable/"
     f = open(curr + conf, 'r+')
@@ -130,22 +125,9 @@ def delete(directory, conf):
         if file == name:
             q = p / file
             shutil.rmtree(q)
-        if file.endswith('.json') and not file.endswith('template.json'):
+        if file.endswith('.json') and file != 'template.json':
             os.remove(file)
 
-
-
-# gets the csv path by taking its name from our config file
-def get_csvpath(directory, conf):
-    name = get_data("project name", conf)
-
-
-
-# cleans our downloadable folder once it reaches the end of the plateform
-def cleanfiles(directory):
-    p = Path(directory)
-    for file in os.listdir(directory):
-        os.remove(file)
 
 # def getdtdic(value):
 # 	l = len(value)

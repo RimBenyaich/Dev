@@ -6,7 +6,7 @@
 	Here are the correlations of the features with the {{target}}, select the ones you want to drop.</p>
 	<h6 class="title">It is advised to drop the ones closest to 0, but you can keep them or drop other features if desired.</h6>
 
-	<form action = '{%url 'cleancontinued'%}' method = "POST">
+	<form action ="{% url 'cleancontinued' %}" method = "POST">
 		{% csrf_token %}
 		{{ form.as_p }}
 		<p> Click the Next button to move on to the next phase "Transformation" </p>

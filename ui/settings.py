@@ -26,7 +26,7 @@ SECRET_KEY = 'mt_zq=%seb#_)jgd36^bpx)698e*l7^ikn0u&^e_m@mh_vhpt6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'UserInterface',
     'rest_framework_mongoengine',
-
 ]
 
 MIDDLEWARE = [

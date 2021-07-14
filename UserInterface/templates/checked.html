@@ -3,32 +3,38 @@
 
 {% block content %} 
 	Everything is in order! Your columns go as follows:
-	<ul>
-		{% for col in categs %}
-			<li>{{col}}</li>
-		{% endfor %}
-	</ul>
+
+	{{ dataframe|safe }}
+
 
 	{% if num == 0 %}
 		<p> After checking your dataset, there is no missing values. 
-		<button type='button' class='btn' onclick="location.href = '{% url 'correlation' %}'">Next</button>
+		<a type='button' class='btn' href="{% url 'correlation' %}">Next</a>
 	{% else %}
 		<br>
 		<p class="h4 mb-4">There are <b>{{num}}</b> missing values. Please indicate how you want to handle each of the missing values:</p>
 		<form action='{%url 'clean'%}' method='POST'>
 			{% csrf_token %}
 			{% for field in form.visible_fields %}
-				{% comment %} {% if forloop.counter0|divisibleby:2 %}
-					<div class="row">
-				{% endif %} {% endcomment %}
-					<div class="col form-group">
-						{{ field.label_tag }}
-						{{ field }}
-					</div>
-				{% comment %} {% if forloop.counter|divisibleby:2 %}
-					</div>
-				{% endif %} {% endcomment %}
+				<div class="col form-group">
+					{{ field.label_tag }}
+					{{ field }}
+				</div>
 			{% endfor %}
+			<div class="form-group mt-4">
+				<label for="probtype">Target column</label>
+				{% for column in dfCols %}
+					<div class="form-check form-check-radio">
+						<label class="form-check-label">
+							<input class="form-check-input" type="radio" name="target" id="column{{ forloop.counter }}" value="{{ column }}" required>
+							{{ column }}
+							<span class="circle">
+								<span class="check"></span>
+							</span>
+						</label>
+					</div>
+				{% endfor %}
+			</div>
 			<button type='submit' name='btn' id='btn' class='btn btn-primary'>Submit</button>
 		</form>
 	{% endif %}

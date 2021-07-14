@@ -4,5 +4,7 @@
 {% block content %}
     <h3> ERROR IN THE DOWNLOADED FILE </h3>
     <p> {{message}} <p>
-    <button type='submit' class='btn btn-danger' onclick="location.href = '{% url 'UI' %}'">Go Back</button> 
+    
+    <a type='button' class='btn btn-danger' href="{% url 'UI' %}">Go Back</a>
+
 {% endblock %}

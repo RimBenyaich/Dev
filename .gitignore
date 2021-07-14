@@ -241,5 +241,11 @@ Thumbs.db
 
 # End of https://www.toptal.com/developers/gitignore/api/django,python,visualstudiocode
 
+__pycache__/
+*.pyc
 *.csv
 *.json
+*.exe
+*.png
+
+gdrive.py
